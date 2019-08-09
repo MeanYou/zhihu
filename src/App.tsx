@@ -1,29 +1,33 @@
 import * as React from 'react';
+import { Layout, Menu } from 'antd';
 import './App.css';
 
-const { useState, useCallback } = React;
+const { Suspense } = React;
+
+const { Header, Content, Footer } = Layout;
 
 function App() {
-  const clickSet = new Set();
-  const changeSet = new Set();
-  const [name, setName] = useState('Tom');
-  const handleClick = useCallback(e => {
-    console.log(e);
-  }, []);
-
-  clickSet.add(handleClick);
-  const handleChange = useCallback(e => {
-    console.log(e.target.value);
-    setName(e.target.value);
-  }, [name]);
-  changeSet.add(handleChange);
-
   return (
     <div className="App">
-      <input value={ name } onChange={ handleChange }/>
-      <button onClick={ handleClick }>点击没有变化</button>
-      <div>{ clickSet.size }</div>
-      <div>{ changeSet.size }</div>
+      <Layout>
+        <Header>
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={['2']}
+                style={{ lineHeight: '64px' }}>
+                <Menu.Item key="1">nav 1</Menu.Item>
+                <Menu.Item key="2">nav 2</Menu.Item>
+                <Menu.Item key="3">nav 3</Menu.Item>
+            </Menu>
+        </Header>
+        <Content>
+            <Suspense fallback={ <div>loading...</div> }>
+                
+            </Suspense>
+        </Content>
+        <Footer>Footer</Footer>
+      </Layout>
     </div>
   );
 }
