@@ -5,7 +5,7 @@ import { setUsername, addTodo } from '../../redux/actions';
 const { useState, useCallback } = React;
 
 // redux集成第一阶段暂时使用any表示
-const ReduxExample = (props:any) => {
+const ReduxExample = (props: any) => {
     const [todo, setTodo] = useState('');
 
     const handleUsernameChange = useCallback((e) => {
@@ -17,9 +17,9 @@ const ReduxExample = (props:any) => {
     }, []);
 
     const handleAddTodo = useCallback((e) => {
-        if(todo) {
-            debugger;
+        if (todo) {
             props.addTodo(todo);
+            setTodo('');
         } else {
             alert('待办事项为空');
         }
@@ -27,29 +27,28 @@ const ReduxExample = (props:any) => {
 
     return (
         <div>
-            <div>用户名：<input onChange={ handleUsernameChange }/></div>
-            <div>{ props.username }</div>
-            <hr/>
-            <div>待办事项：<input onChange={ handleTodoChange }/><button onClick={ handleAddTodo }>新增</button></div>
-            {/* <div>{ props.todos.map((item:string) => (
-                <span>{ item },</span>
-            )) }</div> */}
-            <div>{ props.todos }</div>
+            <div>用户名：<input onChange={handleUsernameChange} /></div>
+            <div>{props.username}</div>
+            <hr />
+            <div>待办事项：<input value={todo} onChange={handleTodoChange} /><button onClick={handleAddTodo}>新增</button></div>
+            <div>{props.todos.map((item: string) => (
+                <span>{item},</span>
+            ))}</div>
+            <a href="https://stackoverflow.com/questions/35411423/how-to-dispatch-a-redux-action-with-a-timeout/35415559#35415559">准备新增中间件</a>
         </div>
     );
 }
 
-const mapState2Props = (state:any) => {
+const mapState2Props = (state: any) => {
+    console.log(state);
     return {
-        username: state.username,
-        todos: state.todos
+        username: state.app.username,
+        todos: state.app.todos
     };
 }
-const mapDispatch2Props = () => {
-    return {
-        setUsername,
-        addTodo
-    }
-}
+const mapDispatch2Props = {
+    setUsername,
+    addTodo
+};
 
 export default connect(mapState2Props, mapDispatch2Props)(ReduxExample);
