@@ -1,35 +1,21 @@
 import * as React from 'react';
-import { Layout, Menu } from 'antd';
-import './App.css';
-
-const { Suspense } = React;
-
-const { Header, Content, Footer } = Layout;
+import { Provider } from 'react-redux';
+import { ConfigProvider } from 'antd';
+import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import { BrowserRouter as Router } from 'react-router-dom';
+import store from './redux/store';
+import Main from './pages/Main';
 
 function App() {
-  return (
-    <div className="App">
-      <Layout>
-        <Header>
-            <Menu
-                theme="dark"
-                mode="horizontal"
-                defaultSelectedKeys={['2']}
-                style={{ lineHeight: '64px' }}>
-                <Menu.Item key="1">nav 1</Menu.Item>
-                <Menu.Item key="2">nav 2</Menu.Item>
-                <Menu.Item key="3">nav 3</Menu.Item>
-            </Menu>
-        </Header>
-        <Content>
-            <Suspense fallback={ <div>loading...</div> }>
-                
-            </Suspense>
-        </Content>
-        <Footer>Footer</Footer>
-      </Layout>
-    </div>
-  );
+    return (
+        <Provider store={store}>
+            <ConfigProvider locale={zh_CN}>
+                <Router>
+                    <Main />
+                </Router>
+            </ConfigProvider>
+        </Provider>
+    );
 }
 
 export default App;

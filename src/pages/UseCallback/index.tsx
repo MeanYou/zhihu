@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button } from 'antd';
+import { RouteProps } from 'react-router-dom';
 
 const { useState, useCallback, useRef, useEffect, useMemo } = React;
 
@@ -7,13 +8,16 @@ export interface NameProps {
   firstName: string;
   lastName: string;
 }
-const UseCallback = () => {
+const UseCallback = (props:RouteProps) => {
   const fullName:NameProps = { firstName: 'Taylor', lastName: 'Swift' };
   const [name, setName] = useState(fullName);
 
   const set = new Set();
   const cbRef = useRef(set);
 
+  useEffect(() => {
+    console.log(props);
+  }, []);
   useEffect(() => {
     setCbCount(cbRef.current.size);
     console.log(cbRef.current);
