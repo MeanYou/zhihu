@@ -1,4 +1,4 @@
-import { SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING, SHOW_LOADING_WITH_TIMEOUT } from './actionTypes';
+import { SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from './actionTypes';
 
 export const setUsername = (username:string) => ({
     type: SET_USERNAME,

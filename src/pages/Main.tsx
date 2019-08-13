@@ -1,11 +1,46 @@
 import * as React from 'react';
 import { Layout, Menu } from 'antd';
+import { RouteComponentProps, RouteProps } from 'react-router';
 import { Route, Switch, Link } from 'react-router-dom';
 
 const { Suspense } = React;
 const { Header, Content, Footer } = Layout;
 
-const Main = () => {
+// route信息
+const paths:Array<RouteProps & {name?:string}> = [
+    {
+        path: '/',
+        exact: true,
+        component: React.lazy(() => import(/* webpackChunkName: "UseCallback" */ './UseCallback'))
+    },
+    {
+        name: 'UseCallback示例',
+        path: '/useCallback',
+        component: React.lazy(() => import(/* webpackChunkName: "UseCallback" */ './UseCallback'))
+    },
+    {
+        name: 'UseContext示例',
+        path: '/useContext',
+        component: React.lazy(() => import(/* webpackChunkName: "UseContext" */ './UseContext'))
+    },
+    {
+        name: 'ErrorBoundry示例',
+        path: '/errorBoundry',
+        component: React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './ErrorBoundry'))
+    },
+    {
+        name: 'Redux示例',
+        path: '/redux',
+        component: React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './Redux'))
+    },
+    {
+        name: 'Exception示例',
+        component: React.lazy(() => import(/* webpackChunkName: "Exception" */ './Exception'))
+    }
+];
+
+const Main = (props:RouteComponentProps) => {
+    console.log(props);
     return (
         <div>
             <Layout>
@@ -13,34 +48,28 @@ const Main = () => {
                     <Menu
                         theme="dark"
                         mode="horizontal"
-                        defaultSelectedKeys={['1']}
+                        selectedKeys={[props.location.pathname]}
                         style={{ lineHeight: '64px' }}>
-                        <Menu.Item key="1">
-                            <Link to="/useCallback">UseCallback示例</Link>
-                        </Menu.Item>
-                        <Menu.Item key="2">
-                            <Link to="/useContext">UseContext示例</Link>
-                        </Menu.Item>
-                        <Menu.Item key="3">
-                            <Link to="/errorBoundry">ErrorBoundry示例</Link>
-                        </Menu.Item>
-                        <Menu.Item key="4">
-                            <Link to="/redux">redux示例</Link>
-                        </Menu.Item>
-                        <Menu.Item key="5">
-                            <Link to="/404">404示例</Link>
+                        {
+                            paths.filter(item => item.name && item.path).map(item => (
+                                <Menu.Item key={ item.path as string }>
+                                    <Link to={ item.path as string }>{ item.name }</Link>
+                                </Menu.Item>
+                            ))
+                        }
+                        <Menu.Item key="/404">
+                            <Link to="/404">Exception示例</Link>
                         </Menu.Item>
                     </Menu>
                 </Header>
                 <Content>
                     <Suspense fallback={<div>loading...</div>}>
                         <Switch>
-                            <Route exact path="/" component={React.lazy(() => import(/* webpackChunkName: "UseCallback" */ './UseCallback'))} />
-                            <Route path="/useCallback" component={React.lazy(() => import(/* webpackChunkName: "UseCallback" */ './UseCallback'))} />
-                            <Route path="/useContext" component={React.lazy(() => import(/* webpackChunkName: "UseContext" */ './UseContext'))} />
-                            <Route path="/errorBoundry" component={React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './ErrorBoundry'))} />
-                            <Route path="/redux" component={React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './Redux'))} />
-                            <Route component={React.lazy(() => import(/* webpackChunkName: "Exception" */ './Exception'))} />
+                            {
+                                paths.map((item, index) => (
+                                    <Route key={ index } {...item}/>
+                                ))
+                            }
                         </Switch>
                     </Suspense>
                 </Content>
