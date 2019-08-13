@@ -1,8 +1,10 @@
-import { SET_USERNAME, ADD_TODO } from '../actionTypes';
+import { SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from '../actionTypes';
 
 export interface StateProps {
     username: string;
     todos: string[];
+    showLoading: boolean;
+    loadingText: string;
 }
 export interface ActionProps {
     type: string;
@@ -11,7 +13,9 @@ export interface ActionProps {
 
 const initialState = {
     username: '',
-    todos: []
+    todos: [],
+    showLoading: false,
+    loadingText: ''
 };
 
 export default function(state:StateProps = initialState, action:ActionProps) {
@@ -27,6 +31,20 @@ export default function(state:StateProps = initialState, action:ActionProps) {
                 ...state,
                 todos: [...state.todos, action.payload]
             };
+        }
+        case SHOW_LOADING: {
+            return {
+                ...state,
+                showLoading: true,
+                loadingText: action.payload
+            };
+        }
+        case HIDE_LOADING: {
+            return {
+                ...state,
+                showLoading: false,
+                loadingText: ''
+            }
         }
         default:
             return state;

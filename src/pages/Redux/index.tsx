@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { setUsername, addTodo } from '../../redux/actions';
+import { Button } from 'antd';
+import { setUsername, addTodo, showLoadingWithTimeout } from '../../redux/actions';
 
 const { useState, useCallback } = React;
 
@@ -25,6 +26,17 @@ const ReduxExample = (props: any) => {
         }
     }, [todo, props]);
 
+    const handleLoad = useCallback(() => {
+        // props.showLoading('正在加载');
+        // setTimeout(() => {
+        //     props.hideLoading();
+        // }, 3000)
+        // 返回了promise的thunk action
+        props.showLoadingWithTimeout('正在加载').then((data:any) => {
+            console.log(data);
+        });
+    }, []);
+
     return (
         <div>
             <div>用户名：<input onChange={handleUsernameChange} /></div>
@@ -34,21 +46,23 @@ const ReduxExample = (props: any) => {
             <div>{props.todos.map((item: string) => (
                 <span>{item},</span>
             ))}</div>
-            <a href="https://stackoverflow.com/questions/35411423/how-to-dispatch-a-redux-action-with-a-timeout/35415559#35415559">准备新增中间件</a>
+            <Button loading={ props.loading } onClick={ handleLoad }>{ props.loadingText || '按钮' }</Button>
         </div>
     );
 }
 
 const mapState2Props = (state: any) => {
-    console.log(state);
     return {
         username: state.app.username,
-        todos: state.app.todos
+        todos: state.app.todos,
+        loading: state.app.showLoading,
+        loadingText: state.app.loadingText
     };
 }
 const mapDispatch2Props = {
     setUsername,
-    addTodo
+    addTodo,
+    showLoadingWithTimeout
 };
 
 export default connect(mapState2Props, mapDispatch2Props)(ReduxExample);
