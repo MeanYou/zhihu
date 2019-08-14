@@ -5,7 +5,10 @@ import { setUsername, addTodo, showLoadingWithTimeout } from '../../redux/action
 
 const { useState, useCallback } = React;
 
-// redux集成第一阶段暂时使用any表示
+/**
+ * redux集成第一阶段暂时使用any表示
+ * function component使用class component hoc connect的方式调用redux
+ *  */
 const ReduxExample = (props: any) => {
     const [todo, setTodo] = useState('');
 
@@ -35,7 +38,7 @@ const ReduxExample = (props: any) => {
         props.showLoadingWithTimeout('正在加载').then((data:any) => {
             console.log(data);
         });
-    }, []);
+    }, [props]);
 
     return (
         <div>
@@ -64,5 +67,5 @@ const mapDispatch2Props = {
     addTodo,
     showLoadingWithTimeout
 };
-
+// 不传mapDispatch，props会自带一个dispatch由开发者手动触发
 export default connect(mapState2Props, mapDispatch2Props)(ReduxExample);

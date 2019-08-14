@@ -16,7 +16,7 @@ const UseCallback = (props:RouteProps) => {
   const cbRef = useRef(set);
 
   useEffect(() => {
-    console.log(props);
+    // console.log(props);
   }, []);
   useEffect(() => {
     setCbCount(cbRef.current.size);
