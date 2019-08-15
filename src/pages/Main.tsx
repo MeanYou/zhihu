@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Layout, Menu } from 'antd';
-import { RouteComponentProps, RouteProps } from 'react-router';
+import { RouteComponentProps, RouteProps } from 'react-router-dom';
 import { Route, Switch, Link } from 'react-router-dom';
 
 const { Suspense } = React;
@@ -34,13 +34,17 @@ const paths:Array<RouteProps & {name?:string}> = [
         component: React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './Redux'))
     },
     {
+        name: 'ReduxHooks示例',
+        path: '/reduxHooks',
+        component: React.lazy(() => import(/* webpackChunkName: "ReduxHooks" */ './ReduxHooks'))
+    },
+    {
         name: 'Exception示例',
         component: React.lazy(() => import(/* webpackChunkName: "Exception" */ './Exception'))
     }
 ];
 
 const Main = (props:RouteComponentProps) => {
-    console.log(props);
     return (
         <div>
             <Layout>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteChildrenProps } from  'react-router';
+import { RouteComponentProps } from  'react-router-dom';
 
 const { useContext, createContext } = React;
 
@@ -12,7 +12,7 @@ const AppContext = createContext<AppContextProps>({
     username: ''
 });
 
-const UseContext = (props:RouteChildrenProps) => {
+const UseContext = (props:RouteComponentProps) => {
     const initialContext = {
         theme: 'default',
         username: ''

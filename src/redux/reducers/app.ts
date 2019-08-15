@@ -1,14 +1,11 @@
 import { SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from '../actionTypes';
+import { ActionProps } from '../actions';
 
 export interface StateProps {
     username: string;
     todos: string[];
     showLoading: boolean;
     loadingText: string;
-}
-export interface ActionProps {
-    type: string;
-    payload: any;
 }
 
 const initialState = {

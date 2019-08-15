@@ -1,21 +1,26 @@
 import { SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from './actionTypes';
 
-export const setUsername = (username:string) => ({
+export interface ActionProps {
+    type: string;
+    payload?: any;
+}
+
+export const setUsername = (username:string):ActionProps => ({
     type: SET_USERNAME,
     payload: username
 });
 
-export const addTodo = (content:string) => ({
+export const addTodo = (content:string):ActionProps => ({
     type: ADD_TODO,
     payload: content
 });
 
-export const showLoading = (content:string) => ({
+export const showLoading = (content:string):ActionProps => ({
     type: SHOW_LOADING,
     payload: content
 });
 
-export const hideLoading = () => ({
+export const hideLoading = ():ActionProps => ({
     type: HIDE_LOADING
 });
 

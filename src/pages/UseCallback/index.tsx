@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button } from 'antd';
-import { RouteProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 const { useState, useCallback, useRef, useEffect, useMemo } = React;
 
@@ -8,7 +8,7 @@ export interface NameProps {
   firstName: string;
   lastName: string;
 }
-const UseCallback = (props:RouteProps) => {
+const UseCallback = (props:RouteComponentProps) => {
   const fullName:NameProps = { firstName: 'Taylor', lastName: 'Swift' };
   const [name, setName] = useState(fullName);
 

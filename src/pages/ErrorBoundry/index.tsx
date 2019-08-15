@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button } from 'antd';
+import { RouteComponentProps } from 'react-router-dom';
 
 export class ErrorBoundry extends React.Component<{}, { error: any; errorInfo: any; }> {
     constructor(props: object) {
@@ -35,26 +36,27 @@ export class ErrorBoundry extends React.Component<{}, { error: any; errorInfo: a
     }
 }
 
-const Example = () => {
+const Example = (props: RouteComponentProps) => {
     const [count, setCount] = React.useState(0);
     const handleClick = React.useCallback(() => {
         setCount(count + 1);
     }, [count]);
-    if(count >= 5) {
+    if (count >= 5) {
         throw new Error('Count is too large!');
     }
     return (
         <div>
-            <div>{ count }</div>
-            <Button onClick={ handleClick }>+1</Button>
+            <div>{count}</div>
+            <Button onClick={handleClick}>+1</Button>
         </div>
     );
 }
 
-const ErrorBoundryExample = () => {
+const ErrorBoundryExample = (props: RouteComponentProps) => {
+    console.log(props);
     return (
         <ErrorBoundry>
-            <Example/>
+            <Example {...props} />
         </ErrorBoundry>
     );
 }

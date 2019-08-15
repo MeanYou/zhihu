@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
+import { RouteComponentProps } from 'react-router-dom';
 import { setUsername, addTodo, showLoadingWithTimeout } from '../../redux/actions';
 
 const { useState, useCallback } = React;
@@ -9,7 +10,7 @@ const { useState, useCallback } = React;
  * redux集成第一阶段暂时使用any表示
  * function component使用class component hoc connect的方式调用redux
  *  */
-const ReduxExample = (props: any) => {
+const ReduxExample = (props: RouteComponentProps | any) => {
     const [todo, setTodo] = useState('');
 
     const handleUsernameChange = useCallback((e) => {

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { RouteChildrenProps } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
 import { Button } from 'antd';
 
 export interface ExceptionProps {
 
 }
 
-const Exception = (props:ExceptionProps & RouteChildrenProps) => {
+const Exception = (props:ExceptionProps & RouteComponentProps) => {
 
     const backHome = React.useCallback(() => {
         props.history.push('/');
