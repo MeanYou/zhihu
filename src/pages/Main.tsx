@@ -33,7 +33,7 @@ const paths:Array<RouteProps & {name?:string}> = [
     {
         name: 'Redux示例',
         path: '/redux',
-        component: React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './Redux'))
+        component: React.lazy(() => import(/* webpackChunkName: "Redux" */ './Redux'))
     },
     {
         name: 'ReduxHooks示例',
