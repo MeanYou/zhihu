@@ -46,17 +46,23 @@ const Login = (props: RouteComponentProps) => {
                             (
                                 <div>
                                     <div className="login__form__input">
+                                        <span>中国 +86</span>
                                         <input placeholder="请输入手机号" />
                                     </div>
                                     <div className="login__form__input">
-                                        <input placeholder="请输入验证码" />
+                                        <input placeholder="请输入6位短信验证码" />
+                                        <span>获取</span>
                                     </div>
                                     <button onClick={handleLogin}>登录/注册</button>
                                 </div>
                             ) : (
                                 <div>
-                                    <input placeholder="请输入手机号/用户名" /><br />
-                                    <input placeholder="请输入密码" />
+                                    <div className="login__form__input">
+                                        <input placeholder="请输入用户名/手机号" />
+                                    </div>
+                                    <div className="login__form__input">
+                                        <input placeholder="请输入密码" />
+                                    </div>
                                     <button onClick={handleLogin}>登录/注册</button>
                                 </div>
                             )

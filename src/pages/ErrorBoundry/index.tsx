@@ -53,7 +53,6 @@ const Example = (props: RouteComponentProps) => {
 }
 
 const ErrorBoundryExample = (props: RouteComponentProps) => {
-    console.log(props);
     return (
         <ErrorBoundry>
             <Example {...props} />

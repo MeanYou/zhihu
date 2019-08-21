@@ -7,7 +7,6 @@ export interface ExceptionProps {
 }
 
 const Exception = (props:ExceptionProps & RouteComponentProps) => {
-
     const backHome = React.useCallback(() => {
         props.history.push('/');
     }, [props.history]);
