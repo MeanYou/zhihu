@@ -1,9 +1,21 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { initialState, reducer } from './store';
 import './style.less';
 
-const { useCallback } = React;
+const { useReducer, useCallback } = React;
 const Login = (props: RouteComponentProps) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    // 验证码登录
+    const loginByVrf = useCallback(() => {
+        dispatch({ type: 'changeLoginType', payload: 'vrf' });
+    }, []);
+    // 密码登录
+    const loginByPwd = useCallback(() => {
+        dispatch({ type: 'changeLoginType', payload: 'pwd' });
+    }, []);
+    // 登录
     const handleLogin = useCallback(() => {
         props.history.push('/');
     }, [props.history]);
@@ -22,19 +34,33 @@ const Login = (props: RouteComponentProps) => {
                 </div>
                 <div className="login__form">
                     <div>
-                        <span>免密登录</span>
-                        <span>密码登录</span>
+                        <span
+                            className={`login__form__type${state.loginType === 'vrf' ? ' login__form__type--active' : ''}`}
+                            onClick={loginByVrf}>免密登录</span>
+                        <span
+                            className={`login__form__type${state.loginType === 'pwd' ? ' login__form__type--active' : ''}`}
+                            onClick={loginByPwd}>密码登录</span>
                     </div>
-                    <div>
-                        <input placeholder="请输入手机号" /><br />
-                        <input placeholder="请输入验证码" />
-                        <button onClick={handleLogin}>登录/注册</button>
-                    </div>
-                    <div>
-                        <input placeholder="请输入手机号/用户名" /><br />
-                        <input placeholder="请输入密码" />
-                        <button onClick={handleLogin}>登录/注册</button>
-                    </div>
+                    {
+                        state.loginType === 'vrf' ?
+                            (
+                                <div>
+                                    <div className="login__form__input">
+                                        <input placeholder="请输入手机号" />
+                                    </div>
+                                    <div className="login__form__input">
+                                        <input placeholder="请输入验证码" />
+                                    </div>
+                                    <button onClick={handleLogin}>登录/注册</button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <input placeholder="请输入手机号/用户名" /><br />
+                                    <input placeholder="请输入密码" />
+                                    <button onClick={handleLogin}>登录/注册</button>
+                                </div>
+                            )
+                    }
                 </div>
                 <div className="login__way">
                     社交账号登录：微信/QQ/微博
