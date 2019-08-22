@@ -8,4 +8,4 @@
    
 ### 1. useCallback应该何时使用？
    
-无意义的优化是万恶之源，我在这篇文章里看到的[应该何时使用useCallback和useMemo](https://jancat.github.io/post/2019/translation-usememo-and-usecallback/)，我们判断一个函数是否需要缓存，要看它是否对性能造成了影响，一般情况下我们不用考虑太多优化，但是原则上为了避免不必要的重渲染，我们在DOM的callback中默认使用useCallback(虽然这在简单组件中并没有提升性能，而且会增加代码量)。
+无意义的优化是万恶之源，我在这篇文章里看到的[应该何时使用useCallback和useMemo](https://jancat.github.io/post/2019/translation-usememo-and-usecallback/)，我们判断一个函数是否需要缓存，要看它是否对性能造成了影响，一般情况下我们不用考虑太多优化，但是原则上为了避免不必要的重渲染，我们在DOM以及子组件的callback函数中默认使用useCallback(虽然这在简单组件中并没有提升性能，而且会增加代码量)。

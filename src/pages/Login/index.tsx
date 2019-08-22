@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { 
+import {
     initialState, reducer, changeLoginType,
     changeTelNumber, changeVerifyCode, changeUsername, changePassword
 } from './store';
 import './style.less';
-import { Input } from 'antd';
+import { Input, Button } from 'antd';
 
 const { useReducer, useCallback } = React;
 const Login = (props: RouteComponentProps) => {
@@ -48,16 +48,16 @@ const Login = (props: RouteComponentProps) => {
         dispatch(changeLoginType('pwd'));
     }, []);
     // 输入cb
-    const handleTelNumberChange = useCallback((e:React.FormEvent<HTMLInputElement>) => {
+    const handleTelNumberChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
         dispatch(changeTelNumber(e.currentTarget.value));
     }, [])
-    const handleVerifyCodeChange = useCallback((e:React.FormEvent<HTMLInputElement>) => {
+    const handleVerifyCodeChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
         dispatch(changeVerifyCode(e.currentTarget.value));
     }, [])
-    const handleUsernameChange = useCallback((e:React.FormEvent<HTMLInputElement>) => {
+    const handleUsernameChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
         dispatch(changeUsername(e.currentTarget.value));
     }, [])
-    const handlePasswordChange = useCallback((e:React.FormEvent<HTMLInputElement>) => {
+    const handlePasswordChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
         dispatch(changePassword(e.currentTarget.value));
     }, [])
     // 登录
@@ -91,27 +91,66 @@ const Login = (props: RouteComponentProps) => {
                             (
                                 <div>
                                     <div className="login__form__input">
-                                        <span>中国 +86</span>
-                                        <Input value={ telNumber } onChange={ handleTelNumberChange } placeholder="请输入手机号"  />
+                                        <span className="login__form__input__country">中国 +86 &nbsp;&gt;</span>
+                                        <Input
+                                            value={telNumber}
+                                            onChange={handleTelNumberChange}
+                                            style={{ width: '70%' }}
+                                            size="large"
+                                            placeholder="请输入手机号" />
                                     </div>
                                     <div className="login__form__input">
-                                        <Input value={ verifyCode } onChange={ handleVerifyCodeChange } placeholder="请输入6位短信验证码" />
-                                        <span></span>
+                                        <Input
+                                            value={verifyCode}
+                                            onChange={handleVerifyCodeChange}
+                                            style={{width: '70%', paddingLeft: 0}}
+                                            size="large"
+                                            placeholder="请输入6位短信验证码" />
+                                        <span className="login__form__input__verify">获取短信验证码</span>
                                     </div>
-                                    <button onClick={handleLogin}>登录/注册</button>
+                                    <Button
+                                        type="primary"
+                                        block
+                                        size="large"
+                                        className="login__form__submit"
+                                        onClick={handleLogin}>登录/注册</Button>
                                 </div>
                             ) : (
                                 <div>
                                     <div className="login__form__input">
-                                        <Input value={ username } onChange={ handleUsernameChange } placeholder="请输入用户名/手机号" />
+                                        <Input
+                                            value={username}
+                                            onChange={handleUsernameChange}
+                                            style={{paddingLeft: 0}}
+                                            size="large"
+                                            placeholder="请输入用户名/手机号" />
                                     </div>
                                     <div className="login__form__input">
-                                        <Input value={ password } onChange={ handlePasswordChange } placeholder="请输入密码" />
+                                        <Input
+                                            value={password}
+                                            onChange={handlePasswordChange}
+                                            style={{ width: '70%', paddingLeft: 0 }}
+                                            type="password"
+                                            size="large"
+                                            placeholder="请输入密码" />
                                     </div>
-                                    <button onClick={handleLogin}>登录/注册</button>
+                                    <Button
+                                        type="primary"
+                                        block
+                                        size="large"
+                                        className="login__form__submit"
+                                        onClick={handleLogin}>登录/注册</Button>
                                 </div>
                             )
                     }
+                </div>
+                <div className="login__warn">
+                    <div>未注册手机验证后自动登录</div>
+                    <div>
+                        注册即代表同意
+                        <a target="_blank" rel="noopener noreferrer" href="https://www.baidu.com">《知乎协议》</a>
+                        <a target="_blank" rel="noopener noreferrer" href="https://www.baidu.com">《隐私保护指引》</a>
+                    </div>
                 </div>
                 <div className="login__way">
                     社交账号登录：微信/QQ/微博

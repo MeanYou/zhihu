@@ -62,8 +62,47 @@
             }
             .login__form__input {
                 margin-top: 24px;
+                padding-bottom: 3px;
                 border-bottom: 1px solid #ebebeb;
+
+                .ant-input {
+                    border: none;
+                    &:focus {
+                        box-shadow: none;
+                    }
+                }
+
+                >span {
+                    display: inline-block;
+                    vertical-align: baseline;
+                    font-size: 15px;
+                }
+
+                .login__form__input__country {
+                    color: #8590a6;
+                    padding-right: 11px;
+                    border-right: 1px solid #ebebeb;
+                }
+                .login__form__input__verify {
+                    color: #175199;
+                    &:hover {
+                        cursor: pointer;
+                        color: #76839b;
+                    }
+                }
             }
+
+            .login__form__submit {
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+        }
+
+        .login__warn {
+            background-color: #f6f6f6;
+            color: gray;
+            width: 400px;
+            padding: 12px 24px;
         }
     }
 }
