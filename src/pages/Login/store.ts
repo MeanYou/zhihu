@@ -5,13 +5,19 @@ export interface State {
     verifyCode: string;
     username: string;
     password: string;
+    verifyType: 'message' | 'voice';
+    canGetVerifyCode: boolean;
+    verifySecondsLeft: number;
 }
 export const initialState: State = {
     loginType: 'vrf',
     telNumber: '',
     verifyCode: '',
     username: '',
-    password: ''
+    password: '',
+    verifyType: 'message',
+    canGetVerifyCode: true,
+    verifySecondsLeft: 60
 }
 
 // action
@@ -21,6 +27,7 @@ const CHANGE_TEL_NUMBER = 'CHANGE_TEL_NUMBER';
 const CHANGE_VERIFY_CODE = 'CHANGE_VERIFY_CODE';
 const CHANGE_USERNAME = 'CHANGE_USERNAME';
 const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+const CHANGE_VERIFY_TYPE = 'CHANGE_VERIFY_TYPE';
 
 // action type
 type Action = {
@@ -38,6 +45,9 @@ type Action = {
 } | {
     type: 'CHANGE_PASSWORD';
     payload: string;
+} | {
+    type: 'CHANGE_VERIFY_TYPE',
+    payload: 'message' | 'voice';
 }
 
 // action creator
@@ -61,6 +71,17 @@ export const changePassword = (password: string): Action => ({
     type: CHANGE_PASSWORD,
     payload: password
 });
+export const changeVerifyType = (type: 'message' | 'voice'): Action => ({
+    type: CHANGE_VERIFY_TYPE,
+    payload: type
+})
+export const loginByPwdAndGetTel = () => (dispatch:any, getState:any) => {
+    dispatch(changeLoginType('pwd'));
+    const state = getState();
+    if(!state.username) {
+        dispatch(changeUsername(state.telNumber));
+    }
+}
 
 // reducer
 export const reducer = (state: State, action: Action): State => {
@@ -89,6 +110,11 @@ export const reducer = (state: State, action: Action): State => {
             return {
                 ...state,
                 password: action.payload
+            };
+        case CHANGE_VERIFY_TYPE:
+            return {
+                ...state,
+                verifyType: action.payload
             };
         default:
             return state;

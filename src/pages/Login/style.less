@@ -29,7 +29,7 @@
             }
             .login__logo__subtitle {
                 font-size: 16px;
-                margin: 6px 0 24px;
+                margin: 4px 0 24px;
                 letter-spacing: 4px;
             }
         }
@@ -38,6 +38,9 @@
             width: 400px;
             background-color: @base-bg-color;
             padding: 0 24px;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            .common-shadow;
 
             .login__form__type {
                 display: inline-block;
@@ -90,11 +93,26 @@
                         color: #76839b;
                     }
                 }
+                .login__form__input__verify--disabled {
+                    &:hover {
+                        cursor: auto;
+                        color: #175199;
+                    }
+                }
             }
 
             .login__form__submit {
                 margin-top: 30px;
                 margin-bottom: 30px;
+            }
+
+            .login__form__vertype {
+                margin-top: 12px;
+                text-align: right;
+                
+                span {
+                    cursor: pointer;
+                }
             }
         }
 
@@ -103,6 +121,49 @@
             color: gray;
             width: 400px;
             padding: 12px 24px;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+            .common-shadow;
+        }
+
+        .login__way {
+            width: 400px;
+            padding: 0 24px;
+            height: 60px;
+            margin-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #8590a6;
+            font-size: 15px;
+            background-color: @base-bg-color;
+            border-radius: 3px;
+            .common-shadow;
+
+            .login__way__left {
+                margin-right: 40px;
+            }
+            .login__way__item {
+                i {
+                    font-size: 20px;
+                    vertical-align: middle;
+                }
+                span {
+                    vertical-align: middle;
+                }
+            }
+        }
+
+        .login__download {
+            width: 400px;
+            height: 42px;
+            line-height: 42px;
+            text-align: center;
+            color: #0084ff;
+            background-color: @base-bg-color;
+            margin-top: 24px;
+            border-radius: 3px;
+            .common-shadow;
         }
     }
 }
