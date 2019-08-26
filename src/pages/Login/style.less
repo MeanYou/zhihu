@@ -67,17 +67,20 @@
                 margin-top: 24px;
                 padding-bottom: 3px;
                 border-bottom: 1px solid #ebebeb;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
 
                 .ant-input {
                     border: none;
+                    padding-left: 0;
                     &:focus {
                         box-shadow: none;
                     }
                 }
 
                 >span {
-                    display: inline-block;
-                    vertical-align: baseline;
                     font-size: 15px;
                 }
 
@@ -88,6 +91,7 @@
                 }
                 .login__form__input__verify {
                     color: #175199;
+                    white-space: nowrap;
                     &:hover {
                         cursor: pointer;
                         color: #76839b;
@@ -98,6 +102,12 @@
                         cursor: auto;
                         color: #175199;
                     }
+                }
+                .login__form__input__validation {
+                    position: absolute;
+                    right: 0;
+                    color: red;
+                    background-color: #FFF;
                 }
             }
 
@@ -164,6 +174,14 @@
             margin-top: 24px;
             border-radius: 3px;
             .common-shadow;
+
+            i {
+                vertical-align: middle;
+            }
+            span {
+                vertical-align: middle;
+                cursor: pointer;
+            }
         }
     }
 }

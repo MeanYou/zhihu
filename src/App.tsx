@@ -6,6 +6,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import store from './redux/store';
 import Main from './pages/Main';
 import Login from './pages/Login';
+import mock from 'mock';
+
+mock();// 模拟返回数据
 
 function App() {
     return (

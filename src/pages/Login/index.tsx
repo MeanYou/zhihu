@@ -2,24 +2,25 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Input, Button, Icon } from 'antd';
 import {
-    initialState, reducer, changeLoginType,
+    initialState, State, reducer, changeLoginType,
     changeTelNumber, changeVerifyCode, changeUsername, changePassword, changeVerifyType,
-    loginByPwdAndGetTel
+    loginByPwdAndGetTel, getVerifyCode,
+    changeTelNumberValid, changeVerifyCodeValid, changeUsernameValid, changePasswordValid, validateTelNumber
 } from './store';
 import useThunkReducer from '@/hooks/useThunkReducer';
 import './style.less';
 
 
-const { useReducer, useCallback } = React;
+const { useCallback } = React;
 const Login = (props: RouteComponentProps) => {
     const startTime = new Date().getTime();
     // const [state, dispatch] = useReducer(reducer, initialState);
-    const [state, dispatch] = useThunkReducer(reducer, initialState);// 测试thunk reducer
-    const { loginType, telNumber, verifyCode, username, password, verifyType } = state;
-
+    const [state, dispatch] = useThunkReducer<State, any>(reducer, initialState);// thunk reducer
+    const { loginType, telNumber, verifyCode, username, password, verifyType, canGetVerifyCode,
+        verifySecondsLeft, telNumberValid, verifyCodeValid, usernameValid, passwordValid } = state;
     React.useEffect(() => {
         const endTime = new Date().getTime();
-        console.log(endTime - startTime);
+        // console.log(endTime - startTime);
     });
 
     // // 验证码登录
@@ -67,13 +68,20 @@ const Login = (props: RouteComponentProps) => {
     }, [dispatch]);
     // 切换验证码类型，不适合使用useCallback，函数的目的就是更新verifyType，无法缓存
     const handleToggleVerifyType = () => {
-        if(verifyType === 'message') {
+        if (verifyType === 'message') {
             dispatch(changeVerifyType('voice'));
         } else {
             dispatch(changeVerifyType('message'));
         }
-        
     };
+    // 获取验证码
+    const handleGetVerify = useCallback(() => {
+        dispatch(getVerifyCode(telNumber));
+    }, [dispatch]);
+    // 验证表单
+    const handleValidateTelNumber = useCallback((value) => {
+        dispatch(validateTelNumber(value));
+    }, [dispatch]);
     // 登录
     const handleLogin = useCallback(() => {
         props.history.push('/');
@@ -109,21 +117,36 @@ const Login = (props: RouteComponentProps) => {
                                         <Input
                                             value={telNumber}
                                             onChange={handleTelNumberChange}
+                                            onBlur={handleValidateTelNumber}
                                             style={{ width: '70%' }}
                                             size="large"
                                             placeholder="请输入手机号" />
+                                        {
+                                            telNumberValid ?
+                                                <span className="login__form__input__validation">请输入正确的手机号</span>
+                                                : <span className="login__form__input__validation">请输入正确的手机号</span>
+                                        }
+
                                     </div>
                                     <div className="login__form__input">
                                         <Input
                                             value={verifyCode}
                                             onChange={handleVerifyCodeChange}
-                                            style={{width: '70%', paddingLeft: 0}}
+                                            style={{ width: '60%' }}
                                             size="large"
                                             placeholder="请输入6位短信验证码" />
-                                        <span className="login__form__input__verify login__form__input__verify--disabled">获取短信验证码</span>
+                                        {
+                                            canGetVerifyCode ?
+                                                (<span className='login__form__input__verify' onClick={handleGetVerify}>
+                                                    {verifyType === 'message' ? '获取短信验证码' : '获取语音验证码'}
+                                                </span>) :
+                                                (<span className='login__form__input__verify login__form__input__verify--disabled'>
+                                                    {verifySecondsLeft}秒后重新发送
+                                                </span>)
+                                        }
                                     </div>
                                     <div className="login__form__vertype">
-                                        <span onClick={ handleToggleVerifyType }>{ verifyType === 'message' ? '接收语音验证码' : '接收短信验证码' }</span>
+                                        <span onClick={handleToggleVerifyType}>{verifyType === 'message' ? '接收语音验证码' : '接收短信验证码'}</span>
                                     </div>
                                     <Button
                                         type="primary"
@@ -138,18 +161,18 @@ const Login = (props: RouteComponentProps) => {
                                         <Input
                                             value={username}
                                             onChange={handleUsernameChange}
-                                            style={{paddingLeft: 0}}
                                             size="large"
                                             placeholder="请输入用户名/手机号" />
                                     </div>
                                     <div className="login__form__input">
-                                        <Input
+                                        <Input.Password
                                             value={password}
                                             onChange={handlePasswordChange}
-                                            style={{ width: '70%', paddingLeft: 0 }}
-                                            type="password"
                                             size="large"
                                             placeholder="请输入密码" />
+                                    </div>
+                                    <div className="login__form__vertype">
+                                        <span>忘记密码？</span>
                                     </div>
                                     <Button
                                         type="primary"
@@ -172,20 +195,21 @@ const Login = (props: RouteComponentProps) => {
                 <div className="login__way">
                     <span className="login__way__left">社交账号登录</span>
                     <span className="login__way__item">
-                        <Icon type="wechat" style={{color: '#60c84d'}} />&nbsp;&nbsp;
+                        <Icon type="wechat" style={{ color: '#60c84d' }} />&nbsp;&nbsp;
                         <span>微信</span>
                     </span>
                     <span className="login__way__item">
-                        <Icon type="qq" style={{color: '#50c8fd'}} />&nbsp;&nbsp;
+                        <Icon type="qq" style={{ color: '#50c8fd' }} />&nbsp;&nbsp;
                         <span>QQ</span>
                     </span>
                     <span className="login__way__item">
-                        <Icon type="weibo" style={{color: '#fb6622'}} />&nbsp;&nbsp;
+                        <Icon type="weibo" style={{ color: '#fb6622' }} />&nbsp;&nbsp;
                         <span>微博</span>
                     </span>
                 </div>
                 <div className="login__download">
-                    <Icon type="zhihu-square" theme="filled" />下载知乎APP
+                    <Icon type="zhihu-square" theme="filled" style={{ fontSize: 18 }} />&nbsp;
+                    <span>下载知乎APP</span>
                 </div>
             </div>
             <div className="login-footer">
