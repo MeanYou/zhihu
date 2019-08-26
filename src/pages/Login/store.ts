@@ -40,9 +40,9 @@ const CHANGE_VERIFY_TYPE = 'CHANGE_VERIFY_TYPE';
 const CHANGE_CAN_GET_VERIFY_CODE = 'CHANGE_CAN_GET_VERIFY_CODE';
 const CHANGE_VERIFY_SECONDS_LEFT = 'CHANGE_VERIFY_SECONDS_LEFT';
 const CHANGE_TEL_NUMBER_VALID = 'CHANGE_TEL_NUMBER_VALID';
-const CHANGE_VERIFY_CODE_VALID = 'CHANGE_TEL_NUMBER_VALID';
-const CHANGE_USERNAME_VALID = 'CHANGE_TEL_NUMBER_VALID';
-const CHANGE_PASSWORD_VALID = 'CHANGE_TEL_NUMBER_VALID';
+const CHANGE_VERIFY_CODE_VALID = 'CHANGE_VERIFY_CODE_VALID';
+const CHANGE_USERNAME_VALID = 'CHANGE_USERNAME_VALID';
+const CHANGE_PASSWORD_VALID = 'CHANGE_PASSWORD_VALID';
 
 // action type
 export type Action = {
@@ -212,26 +212,39 @@ export const loginByPwdAndGetTel = () => (dispatch: any, getState: any) => {
 }
 // 验证表单
 export const validateTelNumber = (telNumber: string) => (dispatch: any, getState: any) => {
-    const telRegex = /^1\d{10}$/;
-    if(!telRegex.test(telNumber)) {
-        dispatch(changeTelNumberValid(false));
-    }
+    return new Promise(resolve => {
+        const telRegex = /^1\d{10}$/;
+        if (telRegex.test(telNumber)) {
+            dispatch(changeTelNumberValid(true));
+            resolve(true);
+        } else {
+            dispatch(changeTelNumberValid(false));
+            resolve(false);
+        }
+    });
+
 }
 export const validateVerifyCode = (verifyCode: string) => (dispatch: any, getState: any) => {
     const verifyRegex = /^\d{6}$/;
-    if(!verifyRegex.test(verifyCode)) {
+    if (verifyRegex.test(verifyCode)) {
+        dispatch(changeVerifyCodeValid(true));
+    } else {
         dispatch(changeVerifyCodeValid(false));
     }
 }
 export const validateUsername = (username: string) => (dispatch: any, getState: any) => {
     const usernameRegex = /^[a-zA-Z0-9_]{4,16}$/;
-    if(!usernameRegex.test(username)) {
+    if (usernameRegex.test(username)) {
+        dispatch(changeUsernameValid(true));
+    } else {
         dispatch(changeUsernameValid(false));
     }
 }
 export const validatePassword = (password: string) => (dispatch: any, getState: any) => {
     const passwordRegex = /^.{8,22}$/;
-    if(!passwordRegex.test(password)) {
+    if (passwordRegex.test(password)) {
+        dispatch(changePasswordValid(true));
+    } else {
         dispatch(changePasswordValid(false));
     }
 }
@@ -244,21 +257,26 @@ export const validateLoginByPwd = (username: string, password: string) => (dispa
     dispatch(validatePassword(password));
 }
 export const getVerifyCode = (telNumber: string) => (dispatch: any, getState: any) => {
-    dispatch(changeCanGetVerifyCode(false));
-    xhr.get('/auth/verify', { params: { tel: telNumber } }).then((data: any) => {
-        dispatch(changeVerifyCode(data.code));
-    });
+    dispatch(validateTelNumber(telNumber)).then((valid: boolean) => {
+        console.log(valid);
+        if (valid) {
+            dispatch(changeCanGetVerifyCode(false));
+            xhr.get('/auth/verify', { params: { tel: telNumber } }).then((data: any) => {
+                dispatch(changeVerifyCode(data.code));
+            });
 
-    let secondsLeft = 60;
-    // 每次渲染会消耗20ms左右，导致结果误差将近一秒，如果精度要求高，可降低interval为500ms，通过new Date()获取剩余秒数
-    const interval = setInterval(() => {
-        if (secondsLeft > 0) {
-            dispatch(changeVerifySecondsLeft(--secondsLeft));
-        } else {
-            dispatch(changeCanGetVerifyCode(true));
-            dispatch(changeVerifySecondsLeft(60));
-            clearInterval(interval);
+            let secondsLeft = 60;
+            // 每次渲染会消耗20ms左右，导致结果误差将近一秒，如果精度要求高，可降低interval为500ms，通过new Date()获取剩余秒数
+            const interval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    dispatch(changeVerifySecondsLeft(--secondsLeft));
+                } else {
+                    dispatch(changeCanGetVerifyCode(true));
+                    dispatch(changeVerifySecondsLeft(60));
+                    clearInterval(interval);
+                }
+
+            }, 1000);
         }
-
-    }, 1000);
+    });
 }

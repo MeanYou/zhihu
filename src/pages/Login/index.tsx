@@ -5,7 +5,7 @@ import {
     initialState, State, reducer, changeLoginType,
     changeTelNumber, changeVerifyCode, changeUsername, changePassword, changeVerifyType,
     loginByPwdAndGetTel, getVerifyCode,
-    changeTelNumberValid, changeVerifyCodeValid, changeUsernameValid, changePasswordValid, validateTelNumber
+    validateTelNumber, validateVerifyCode
 } from './store';
 import useThunkReducer from '@/hooks/useThunkReducer';
 import './style.less';
@@ -79,8 +79,12 @@ const Login = (props: RouteComponentProps) => {
         dispatch(getVerifyCode(telNumber));
     }, [dispatch]);
     // 验证表单
-    const handleValidateTelNumber = useCallback((value) => {
-        dispatch(validateTelNumber(value));
+    const handleValidateTelNumber = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+        dispatch(validateTelNumber(e.currentTarget.value));
+    }, [dispatch]);
+    const handleValidateVerifyCode = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+        console.log(e.currentTarget.value);
+        dispatch(validateVerifyCode(e.currentTarget.value));
     }, [dispatch]);
     // 登录
     const handleLogin = useCallback(() => {
@@ -122,19 +126,22 @@ const Login = (props: RouteComponentProps) => {
                                             size="large"
                                             placeholder="请输入手机号" />
                                         {
-                                            telNumberValid ?
-                                                <span className="login__form__input__validation">请输入正确的手机号</span>
-                                                : <span className="login__form__input__validation">请输入正确的手机号</span>
+                                            telNumberValid ? null :
+                                                <span className="login__form__input__validation">手机号错误</span>
                                         }
-
                                     </div>
                                     <div className="login__form__input">
                                         <Input
                                             value={verifyCode}
                                             onChange={handleVerifyCodeChange}
+                                            onBlur={handleValidateVerifyCode}
                                             style={{ width: '60%' }}
                                             size="large"
-                                            placeholder="请输入6位短信验证码" />
+                                            placeholder="请输入验证码" />
+                                        {
+                                            verifyCodeValid ? null :
+                                                <span className="login__form__input__validation" style={{right: 130}}>验证码错误</span>
+                                        }
                                         {
                                             canGetVerifyCode ?
                                                 (<span className='login__form__input__verify' onClick={handleGetVerify}>
@@ -163,6 +170,10 @@ const Login = (props: RouteComponentProps) => {
                                             onChange={handleUsernameChange}
                                             size="large"
                                             placeholder="请输入用户名/手机号" />
+                                        {
+                                            usernameValid ? null :
+                                                <span className="login__form__input__validation">用户名错误</span>
+                                        }
                                     </div>
                                     <div className="login__form__input">
                                         <Input.Password
@@ -170,6 +181,10 @@ const Login = (props: RouteComponentProps) => {
                                             onChange={handlePasswordChange}
                                             size="large"
                                             placeholder="请输入密码" />
+                                        {
+                                            passwordValid ? null :
+                                                <span className="login__form__input__validation">密码错误</span>
+                                        }
                                     </div>
                                     <div className="login__form__vertype">
                                         <span>忘记密码？</span>

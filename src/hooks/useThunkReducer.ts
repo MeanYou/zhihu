@@ -8,9 +8,9 @@ const useThunkReducer = <S, A>(reducer:Reducer<any, any>, initialState:S):[S, Re
 
     const thunkDispatch = (action:any) => {
         if(typeof action === 'function') {
-            action(dispatch, () => state);
+            return action(thunkDispatch, () => state);
         } else {
-            dispatch(action);
+            return dispatch(action);
         }
     }
 
