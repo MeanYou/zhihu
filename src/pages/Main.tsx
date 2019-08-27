@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Layout, Menu } from 'antd';
 import { RouteComponentProps, RouteProps } from 'react-router-dom';
 import { Route, Switch, Link } from 'react-router-dom';
-import '../App.less';
 
 const { Suspense } = React;
 const { Header, Content, Footer } = Layout;

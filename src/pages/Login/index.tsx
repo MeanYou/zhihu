@@ -1,27 +1,42 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
-import { Input, Button, Icon } from 'antd';
+import { RouteComponentProps } from 'react-router-dom';
+import { Input, Button, Icon, message } from 'antd';
 import {
     initialState, State, reducer, changeLoginType,
     changeTelNumber, changeVerifyCode, changeUsername, changePassword, changeVerifyType,
     loginByPwdAndGetTel, getVerifyCode,
-    validateTelNumber, validateVerifyCode
+    validateTelNumber, validateVerifyCode, validateLoginByVrf, changeTelNumberValid, changeVerifyCodeValid, loginVrf,
+    verifyInterval,
+    changeUsernameValid,
+    validateUsername,
+    changePasswordValid,
+    validatePassword,
+    validateLoginByPwd,
+    loginPwd
 } from './store';
 import useThunkReducer from '@/hooks/useThunkReducer';
 import './style.less';
 
 
-const { useCallback } = React;
+const { useEffect, useCallback } = React;
 const Login = (props: RouteComponentProps) => {
     const startTime = new Date().getTime();
     // const [state, dispatch] = useReducer(reducer, initialState);
     const [state, dispatch] = useThunkReducer<State, any>(reducer, initialState);// thunk reducer
     const { loginType, telNumber, verifyCode, username, password, verifyType, canGetVerifyCode,
         verifySecondsLeft, telNumberValid, verifyCodeValid, usernameValid, passwordValid } = state;
-    React.useEffect(() => {
+    useEffect(() => {
         const endTime = new Date().getTime();
-        // console.log(endTime - startTime);
+        // console.log(endTime - startTime);// 计算渲染时间
     });
+    // 离开组件注销interval
+    useEffect(() => {
+        return () => {
+            if (verifyInterval) {
+                clearInterval(verifyInterval);
+            }
+        };
+    }, []);
 
     // // 验证码登录
     // const loginByVrf = () => {
@@ -77,19 +92,61 @@ const Login = (props: RouteComponentProps) => {
     // 获取验证码
     const handleGetVerify = useCallback(() => {
         dispatch(getVerifyCode(telNumber));
-    }, [dispatch]);
+    }, [dispatch, telNumber]);
     // 验证表单
     const handleValidateTelNumber = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-        dispatch(validateTelNumber(e.currentTarget.value));
+        if (e.type === 'focus') {
+            dispatch(changeTelNumberValid(true));
+        } else if (e.type === 'blur') {
+            dispatch(validateTelNumber(e.currentTarget.value));
+        }
     }, [dispatch]);
     const handleValidateVerifyCode = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-        console.log(e.currentTarget.value);
-        dispatch(validateVerifyCode(e.currentTarget.value));
+        if (e.type === 'focus') {
+            dispatch(changeVerifyCodeValid(true));
+        } else if (e.type === 'blur') {
+            dispatch(validateVerifyCode(e.currentTarget.value));
+        }
+    }, [dispatch]);
+    const handleValidateUsername = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+        if (e.type === 'focus') {
+            dispatch(changeUsernameValid(true));
+        } else if (e.type === 'blur') {
+            dispatch(validateUsername(e.currentTarget.value));
+        }
+    }, [dispatch]);
+    const handleValidatePassword = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+        if (e.type === 'focus') {
+            dispatch(changePasswordValid(true));
+        } else if (e.type === 'blur') {
+            dispatch(validatePassword(e.currentTarget.value));
+        }
     }, [dispatch]);
     // 登录
-    const handleLogin = useCallback(() => {
-        props.history.push('/');
-    }, [props.history]);
+    const handleLoginVrf = useCallback(() => {
+        dispatch(validateLoginByVrf(telNumber, verifyCode)).then((valid: boolean) => {
+            if (valid) {
+                dispatch(loginVrf(telNumber, verifyCode)).then((data: any) => {
+                    message.success(data.message);
+                    props.history.push('/');
+                }).catch((err: any) => {
+                    message.error(err.message);
+                });
+            }
+        });
+    }, [props.history, dispatch, telNumber, verifyCode]);
+    const handleLoginPwd = useCallback(() => {
+        dispatch(validateLoginByPwd(username, password)).then((valid: boolean) => {
+            if (valid) {
+                dispatch(loginPwd(username, password)).then((data: any) => {
+                    message.success(data.message);
+                    props.history.push('/');
+                }).catch((err:any) => {
+                    message.error(err.message);
+                });
+            }
+        });
+    }, [dispatch, username, password, props.history]);
 
     return (
         <div className="login">
@@ -122,6 +179,7 @@ const Login = (props: RouteComponentProps) => {
                                             value={telNumber}
                                             onChange={handleTelNumberChange}
                                             onBlur={handleValidateTelNumber}
+                                            onFocus={handleValidateTelNumber}
                                             style={{ width: '70%' }}
                                             size="large"
                                             placeholder="请输入手机号" />
@@ -135,12 +193,13 @@ const Login = (props: RouteComponentProps) => {
                                             value={verifyCode}
                                             onChange={handleVerifyCodeChange}
                                             onBlur={handleValidateVerifyCode}
+                                            onFocus={handleValidateVerifyCode}
                                             style={{ width: '60%' }}
                                             size="large"
                                             placeholder="请输入验证码" />
                                         {
                                             verifyCodeValid ? null :
-                                                <span className="login__form__input__validation" style={{right: 130}}>验证码错误</span>
+                                                <span className="login__form__input__validation" style={{ right: 130 }}>验证码错误</span>
                                         }
                                         {
                                             canGetVerifyCode ?
@@ -160,7 +219,7 @@ const Login = (props: RouteComponentProps) => {
                                         block
                                         size="large"
                                         className="login__form__submit"
-                                        onClick={handleLogin}>登录/注册</Button>
+                                        onClick={handleLoginVrf}>登录/注册</Button>
                                 </div>
                             ) : (
                                 <div>
@@ -168,6 +227,8 @@ const Login = (props: RouteComponentProps) => {
                                         <Input
                                             value={username}
                                             onChange={handleUsernameChange}
+                                            onBlur={handleValidateUsername}
+                                            onFocus={handleValidateUsername}
                                             size="large"
                                             placeholder="请输入用户名/手机号" />
                                         {
@@ -179,6 +240,8 @@ const Login = (props: RouteComponentProps) => {
                                         <Input.Password
                                             value={password}
                                             onChange={handlePasswordChange}
+                                            onBlur={handleValidatePassword}
+                                            onFocus={handleValidatePassword}
                                             size="large"
                                             placeholder="请输入密码" />
                                         {
@@ -194,7 +257,7 @@ const Login = (props: RouteComponentProps) => {
                                         block
                                         size="large"
                                         className="login__form__submit"
-                                        onClick={handleLogin}>登录/注册</Button>
+                                        onClick={handleLoginPwd}>登录/注册</Button>
                                 </div>
                             )
                     }

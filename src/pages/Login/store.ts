@@ -16,10 +16,10 @@ export interface State {
 }
 export const initialState: State = {
     loginType: 'vrf',
-    telNumber: '',
+    telNumber: '15566666666',
     verifyCode: '',
-    username: '',
-    password: '',
+    username: 'MeanYou',
+    password: '12345678',
     verifyType: 'message',
     canGetVerifyCode: true,
     verifySecondsLeft: 60,
@@ -225,58 +225,133 @@ export const validateTelNumber = (telNumber: string) => (dispatch: any, getState
 
 }
 export const validateVerifyCode = (verifyCode: string) => (dispatch: any, getState: any) => {
-    const verifyRegex = /^\d{6}$/;
-    if (verifyRegex.test(verifyCode)) {
-        dispatch(changeVerifyCodeValid(true));
-    } else {
-        dispatch(changeVerifyCodeValid(false));
-    }
+    return new Promise(resolve => {
+        const verifyRegex = /^\d{6}$/;
+        if (verifyRegex.test(verifyCode)) {
+            dispatch(changeVerifyCodeValid(true));
+            resolve(true);
+        } else {
+            dispatch(changeVerifyCodeValid(false));
+            resolve(false);
+        }
+    });
+
 }
 export const validateUsername = (username: string) => (dispatch: any, getState: any) => {
-    const usernameRegex = /^[a-zA-Z0-9_]{4,16}$/;
-    if (usernameRegex.test(username)) {
-        dispatch(changeUsernameValid(true));
-    } else {
-        dispatch(changeUsernameValid(false));
-    }
+    return new Promise(resolve => {
+        const usernameRegex = /^[a-zA-Z0-9_]{4,16}$/;
+        if (usernameRegex.test(username)) {
+            dispatch(changeUsernameValid(true));
+            resolve(true);
+        } else {
+            dispatch(changeUsernameValid(false));
+            resolve(false);
+        }
+    });
+
 }
 export const validatePassword = (password: string) => (dispatch: any, getState: any) => {
-    const passwordRegex = /^.{8,22}$/;
-    if (passwordRegex.test(password)) {
-        dispatch(changePasswordValid(true));
-    } else {
-        dispatch(changePasswordValid(false));
-    }
+    return new Promise(resolve => {
+        const passwordRegex = /^.{8,22}$/;
+        if (passwordRegex.test(password)) {
+            dispatch(changePasswordValid(true));
+            resolve(true);
+        } else {
+            dispatch(changePasswordValid(false));
+            resolve(false);
+        }
+    });
 }
+// 验证码登录按钮验证
 export const validateLoginByVrf = (telNumber: string, verifyCode: string) => (dispatch: any, getState: any) => {
-    dispatch(validateTelNumber(telNumber));
-    dispatch(validateVerifyCode(verifyCode));
+    return Promise.all([
+        dispatch(validateTelNumber(telNumber)),
+        dispatch(validateVerifyCode(verifyCode))
+    ]).then(validArr => {
+        if (!validArr[0]) {
+            dispatch(changeTelNumberValid(false));
+        }
+        if (!validArr[1]) {
+            dispatch(changeVerifyCodeValid(false));
+        }
+        if (validArr[0] && validArr[1]) {
+            return true;
+        } else {
+            return false;
+        }
+    });
 }
+// 密码登录按钮验证
 export const validateLoginByPwd = (username: string, password: string) => (dispatch: any, getState: any) => {
-    dispatch(validateUsername(username));
-    dispatch(validatePassword(password));
+    return Promise.all([
+        dispatch(validateUsername(username)),
+        dispatch(validatePassword(password))
+    ]).then(validArr => {
+        if (!validArr[0]) {
+            dispatch(changeUsernameValid(false));
+        }
+        if (!validArr[1]) {
+            dispatch(changePasswordValid(false));
+        }
+        if (validArr[0] && validArr[1]) {
+            return true;
+        } else {
+            return false;
+        }
+    });
 }
+// 获取验证码
+export let verifyInterval:NodeJS.Timeout;
 export const getVerifyCode = (telNumber: string) => (dispatch: any, getState: any) => {
     dispatch(validateTelNumber(telNumber)).then((valid: boolean) => {
-        console.log(valid);
         if (valid) {
             dispatch(changeCanGetVerifyCode(false));
             xhr.get('/auth/verify', { params: { tel: telNumber } }).then((data: any) => {
                 dispatch(changeVerifyCode(data.code));
+                dispatch(changeVerifyCodeValid(true));
             });
 
             let secondsLeft = 60;
             // 每次渲染会消耗20ms左右，导致结果误差将近一秒，如果精度要求高，可降低interval为500ms，通过new Date()获取剩余秒数
-            const interval = setInterval(() => {
+            verifyInterval = setInterval(() => {
                 if (secondsLeft > 0) {
                     dispatch(changeVerifySecondsLeft(--secondsLeft));
                 } else {
                     dispatch(changeCanGetVerifyCode(true));
                     dispatch(changeVerifySecondsLeft(60));
-                    clearInterval(interval);
+                    clearInterval(verifyInterval);
                 }
 
             }, 1000);
         }
+    });
+}
+// 登录接口
+export const loginVrf = (telNumber:string, verifyCode:string) => (dispatch:any, getState:any) => {
+    return new Promise((resolve, reject) => {
+        xhr.post('/auth/login/verify', {
+            tel: telNumber,
+            verify: verifyCode
+        }).then(data => {
+            if (data.status === 1) {
+                resolve(data);
+            } else {
+                reject(data);
+            }
+        });
+    });
+}
+export const loginPwd = (username:string, password:string) => (dispatch:any, getState:any) => {
+    return new Promise((resolve, reject) => {
+        xhr.post('/auth/login/password', {
+            username,
+            password
+        }).then(data => {
+            if (data.status === 1) {
+                resolve(data);
+            } else {
+                reject(data);
+            }
+        });
     });
 }

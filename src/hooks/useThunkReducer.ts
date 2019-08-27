@@ -3,7 +3,7 @@ import * as React from 'react';
 type Reducer<S, A> = (prevState: S, action: A) => S;
 
 const { useReducer } = React;
-const useThunkReducer = <S, A>(reducer:Reducer<any, any>, initialState:S):[S, React.Dispatch<A>] => {
+const useThunkReducer = <S, A>(reducer:Reducer<any, any>, initialState:S):[S, any] => {
     const [state, dispatch] = useReducer<Reducer<S, A>>(reducer, initialState);
 
     const thunkDispatch = (action:any) => {
