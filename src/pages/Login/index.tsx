@@ -20,15 +20,18 @@ import './style.less';
 
 const { useEffect, useCallback } = React;
 const Login = (props: RouteComponentProps) => {
-    const startTime = new Date().getTime();
     // const [state, dispatch] = useReducer(reducer, initialState);
     const [state, dispatch] = useThunkReducer<State, any>(reducer, initialState);// thunk reducer
     const { loginType, telNumber, verifyCode, username, password, verifyType, canGetVerifyCode,
         verifySecondsLeft, telNumberValid, verifyCodeValid, usernameValid, passwordValid } = state;
-    useEffect(() => {
-        const endTime = new Date().getTime();
-        // console.log(endTime - startTime);// 计算渲染时间
-    });
+
+    // 计算渲染时间
+    // const startTime = new Date().getTime();
+    // useEffect(() => {
+    //     const endTime = new Date().getTime();
+    //     console.log(endTime - startTime);
+    // });
+
     // 离开组件注销interval
     useEffect(() => {
         return () => {

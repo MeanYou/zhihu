@@ -1,12 +1,9 @@
-import * as React from 'react';
-
-const { useRef } = React;
 const useInitialize = (fun:() => void) => {
-    const isInitRef = useRef(true);
-    if (isInitRef.current) {
+    let isInit = true;
+    if(isInit) {
         fun();
-        console.log('初始化');
-        isInitRef.current = false;
+        console.log('initialize...');
+        isInit = false;
     }
 };
 

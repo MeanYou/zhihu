@@ -1,4 +1,5 @@
 import xhr from '@/utils/xhr';
+import { crypto } from '@/utils/CommonUtil';
 // store
 export interface State {
     loginType: 'vrf' | 'pwd';// 验证码登录，密码登录
@@ -344,8 +345,11 @@ export const loginVrf = (telNumber:string, verifyCode:string) => (dispatch:any, 
 export const loginPwd = (username:string, password:string) => (dispatch:any, getState:any) => {
     return new Promise((resolve, reject) => {
         xhr.post('/auth/login/password', {
-            username,
-            password
+            token: crypto.encrypt(`${username} ${password}`)
+        }, {
+            headers: {
+                token: crypto.encrypt(`${username} ${password}`)
+            }
         }).then(data => {
             if (data.status === 1) {
                 resolve(data);

@@ -30,11 +30,11 @@ function App() {
     );
 }
 
-const PrivateRoute = (props:RouteProps) => {
-    const { component: C, ...rest } = props;
-    return (
-        <Route {...props}/>
-    );
-}
+// const PrivateRoute = (props:RouteProps) => {
+//     const { component: C, ...rest } = props;
+//     return (
+//         <Route {...props}/>
+//     );
+// }
 
 export default App;
