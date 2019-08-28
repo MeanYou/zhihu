@@ -1,9 +1,14 @@
-import { SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from './actionTypes';
+import { CHANGE_ISLOGIN, SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from './actionTypes';
 
 export interface ActionProps {
     type: string;
     payload?: any;
 }
+
+export const changeIsLogin = (isLogin: boolean):ActionProps => ({
+    type: CHANGE_ISLOGIN,
+    payload: isLogin
+});
 
 export const setUsername = (username:string):ActionProps => ({
     type: SET_USERNAME,

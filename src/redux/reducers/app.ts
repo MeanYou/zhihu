@@ -1,7 +1,8 @@
-import { SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from '../actionTypes';
+import { CHANGE_ISLOGIN, SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from '../actionTypes';
 import { ActionProps } from '../actions';
 
 export interface StateProps {
+    isLogin: boolean;
     username: string;
     todos: string[];
     showLoading: boolean;
@@ -9,6 +10,7 @@ export interface StateProps {
 }
 
 const initialState = {
+    isLogin: false,
     username: '',
     todos: [],
     showLoading: false,
@@ -17,6 +19,12 @@ const initialState = {
 
 export default function(state:StateProps = initialState, action:ActionProps) {
     switch(action.type) {
+        case CHANGE_ISLOGIN: {
+            return {
+                ...state,
+                isLogin: action.payload
+            };
+        }
         case SET_USERNAME: {
             return {
                 ...state,
