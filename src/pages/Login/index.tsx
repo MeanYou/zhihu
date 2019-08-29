@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Input, Button, Icon, message } from 'antd';
+import { useDispatch } from 'react-redux';
+import { changeIsLogin } from '@/redux/actions';
 import {
     initialState, State, reducer, changeLoginType,
     changeTelNumber, changeVerifyCode, changeUsername, changePassword, changeVerifyType,
@@ -20,6 +22,7 @@ import './style.less';
 
 const { useEffect, useCallback } = React;
 const Login = (props: RouteComponentProps) => {
+    const globalDispatch = useDispatch();
     // const [state, dispatch] = useReducer(reducer, initialState);
     const [state, dispatch] = useThunkReducer<State, any>(reducer, initialState);// thunk reducer
     const { loginType, telNumber, verifyCode, username, password, verifyType, canGetVerifyCode,
@@ -131,25 +134,28 @@ const Login = (props: RouteComponentProps) => {
             if (valid) {
                 dispatch(loginVrf(telNumber, verifyCode)).then((data: any) => {
                     message.success(data.message);
+                    // redux登录状态切换为true
+                    globalDispatch(changeIsLogin(true));
                     props.history.push('/');
                 }).catch((err: any) => {
                     message.error(err.message);
                 });
             }
         });
-    }, [props.history, dispatch, telNumber, verifyCode]);
+    }, [props.history, dispatch, telNumber, verifyCode, globalDispatch]);
     const handleLoginPwd = useCallback(() => {
         dispatch(validateLoginByPwd(username, password)).then((valid: boolean) => {
             if (valid) {
                 dispatch(loginPwd(username, password)).then((data: any) => {
                     message.success(data.message);
+                    globalDispatch(changeIsLogin(true));
                     props.history.push('/');
                 }).catch((err:any) => {
                     message.error(err.message);
                 });
             }
         });
-    }, [dispatch, username, password, props.history]);
+    }, [dispatch, username, password, props.history, globalDispatch]);
 
     return (
         <div className="login">

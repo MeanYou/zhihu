@@ -1,19 +1,12 @@
 import * as React from 'react';
 import { Route, RouteProps, Redirect } from 'react-router-dom';
-import { useSelector, shallowEqual } from 'react-redux';
-import { StoreProps } from '@/redux/reducers';
-
-const selector = (state: StoreProps) => {
-    return {
-        isLogin: state.app.isLogin
-    };
-}
+import Cookies from 'js-cookie';
 
 const PrivateRoute = (props:RouteProps) => {
-    const { isLogin } = useSelector(selector, shallowEqual);
+    const token = Cookies.get('token');
     const { component: C, ...rest } = props;
 
-    return isLogin ?
+    return token ?
         <Route { ...props }/> :
         <Redirect to="/login"/>
 }

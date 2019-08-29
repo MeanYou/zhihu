@@ -1,9 +1,11 @@
+import { useRef } from 'react';
+
 const useInitialize = (fun:() => void) => {
-    let isInit = true;
-    if(isInit) {
+    let isInitRef = useRef(true);
+    if(isInitRef.current) {
         fun();
         console.log('initialize...');
-        isInit = false;
+        isInitRef.current = false;
     }
 };
 
