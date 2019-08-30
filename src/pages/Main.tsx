@@ -6,7 +6,7 @@ const { Suspense } = React;
 const { Header, Content, Footer } = Layout;
 
 // route信息
-const paths:Array<RouteProps & {name?:string}> = [
+const paths: Array<RouteProps & { name?: string }> = [
     {
         path: '/',
         exact: true,
@@ -43,7 +43,7 @@ const paths:Array<RouteProps & {name?:string}> = [
     }
 ];
 
-const Main = (props:RouteComponentProps) => {
+const Main = (props: RouteComponentProps) => {
     return (
         <div>
             <Layout>
@@ -53,16 +53,19 @@ const Main = (props:RouteComponentProps) => {
                         mode="horizontal"
                         selectedKeys={[props.location.pathname]}
                         style={{ lineHeight: '64px' }}>
-                        {
-                            paths.filter(item => item.name && item.path).map(item => (
-                                <Menu.Item key={ item.path as string }>
-                                    <Link to={ item.path as string }>{ item.name }</Link>
-                                </Menu.Item>
-                            ))
-                        }
-                        <Menu.Item key="/404">
-                            <Link to="/404">Exception示例</Link>
-                        </Menu.Item>
+                        <Menu.SubMenu title="示例">
+                            {
+                                paths.filter(item => item.name && item.path).map(item => (
+                                    <Menu.Item key={item.path as string}>
+                                        <Link to={item.path as string}>{item.name}</Link>
+                                    </Menu.Item>
+                                ))
+                            }
+                            <Menu.Item key="/404">
+                                <Link to="/404">Exception示例</Link>
+                            </Menu.Item>
+                        </Menu.SubMenu>
+
                     </Menu>
                 </Header>
                 <Content>
@@ -70,7 +73,7 @@ const Main = (props:RouteComponentProps) => {
                         <Switch>
                             {
                                 paths.map((item, index) => (
-                                    <Route key={ index } {...item}/>
+                                    <Route key={index} {...item} />
                                 ))
                             }
                         </Switch>
