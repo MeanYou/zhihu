@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Button } from 'antd';
 import { StoreProps } from '@/redux/reducers';
-import { showLoadingWithTimeout, setUsername } from '../../redux/actions';
+import { showLoadingWithTimeout, setUsername } from '@/redux/actions';
 
 const { useCallback, useState } = React;
 

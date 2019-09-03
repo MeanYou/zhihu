@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 import { RouteComponentProps } from 'react-router-dom';
-import { setUsername, addTodo, showLoadingWithTimeout } from '../../redux/actions';
+import { setUsername, addTodo, showLoadingWithTimeout } from '@/redux/actions';
 
 const { useState, useCallback } = React;
 

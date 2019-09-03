@@ -1,49 +1,72 @@
 import * as React from 'react';
 import { Layout, Menu } from 'antd';
-import { Route, Switch, Link, RouteComponentProps, RouteProps } from 'react-router-dom';
+import { Route, Switch, Link, RouteComponentProps, RouteProps, Redirect } from 'react-router-dom';
+import useInitialize from '@/hooks/useInitialize';
 
 const { Suspense } = React;
 const { Header, Content, Footer } = Layout;
 
 // route信息
-const paths: Array<RouteProps & { name?: string }> = [
+const frontPaths: Array<RouteProps & {name?: string}> = [
     {
-        path: '/',
-        exact: true,
-        component: React.lazy(() => import(/* webpackChunkName: "UseCallback" */ './UseCallback'))
+        name: '首页',
+        path: '/home',
+        component: React.lazy(() => import(/* webpackChunkName: "FrontPage" */ './FrontPage'))
     },
+    {
+        name: '发现',
+        path: '/explore',
+        component: React.lazy(() => import(/* webpackChunkName: "Explore" */ './Explore'))
+    }
+];
+const examplePaths: Array<RouteProps & { name?: string }> = [
     {
         name: 'UseCallback示例',
         path: '/useCallback',
-        component: React.lazy(() => import(/* webpackChunkName: "UseCallback" */ './UseCallback'))
+        component: React.lazy(() => import(/* webpackChunkName: "UseCallback" */ './Examples/UseCallback'))
     },
     {
         name: 'UseContext示例',
         path: '/useContext',
-        component: React.lazy(() => import(/* webpackChunkName: "UseContext" */ './UseContext'))
+        component: React.lazy(() => import(/* webpackChunkName: "UseContext" */ './Examples/UseContext'))
     },
     {
         name: 'ErrorBoundry示例',
         path: '/errorBoundry',
-        component: React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './ErrorBoundry'))
+        component: React.lazy(() => import(/* webpackChunkName: "ErrorBoundry" */ './Examples/ErrorBoundry'))
     },
     {
         name: 'Redux示例',
         path: '/redux',
-        component: React.lazy(() => import(/* webpackChunkName: "Redux" */ './Redux'))
+        component: React.lazy(() => import(/* webpackChunkName: "Redux" */ './Examples/Redux'))
     },
     {
         name: 'ReduxHooks示例',
         path: '/reduxHooks',
-        component: React.lazy(() => import(/* webpackChunkName: "ReduxHooks" */ './ReduxHooks'))
+        component: React.lazy(() => import(/* webpackChunkName: "ReduxHooks" */ './Examples/ReduxHooks'))
     },
     {
         name: 'Exception示例',
-        component: React.lazy(() => import(/* webpackChunkName: "Exception" */ './Exception'))
+        path: '/:any',
+        component: React.lazy(() => import(/* webpackChunkName: "Exception" */ './Examples/Exception'))
     }
 ];
 
 const Main = (props: RouteComponentProps) => {
+    let selectedKeys = (() => {
+        let keys:Array<string> = [];
+        frontPaths.forEach(item => {
+            if (props.location.pathname.startsWith(item.path as string)) {
+                keys.push(item.path as string);
+            }
+        })
+        keys.length === 0 && examplePaths.forEach(item => {
+            if (props.location.pathname.startsWith(item.path as string)) {
+                keys.push(item.path as string);
+            }
+        })
+        return keys;
+    })();
     return (
         <div>
             <Layout>
@@ -51,31 +74,40 @@ const Main = (props: RouteComponentProps) => {
                     <Menu
                         theme="dark"
                         mode="horizontal"
-                        selectedKeys={[props.location.pathname]}
+                        selectedKeys={selectedKeys}
                         style={{ lineHeight: '64px' }}>
+                        {
+                            frontPaths.filter(item => item.name && item.path).map(item => (
+                                <Menu.Item key={item.path as string}>
+                                    <Link to={item.path as string}>{item.name}</Link>
+                                </Menu.Item>
+                            ))
+                        }
                         <Menu.SubMenu title="示例">
                             {
-                                paths.filter(item => item.name && item.path).map(item => (
+                                examplePaths.filter(item => item.name && item.path).map(item => (
                                     <Menu.Item key={item.path as string}>
                                         <Link to={item.path as string}>{item.name}</Link>
                                     </Menu.Item>
                                 ))
                             }
-                            <Menu.Item key="/404">
-                                <Link to="/404">Exception示例</Link>
-                            </Menu.Item>
                         </Menu.SubMenu>
-
                     </Menu>
                 </Header>
                 <Content>
                     <Suspense fallback={<div>loading...</div>}>
                         <Switch>
                             {
-                                paths.map((item, index) => (
-                                    <Route key={index} {...item} />
+                                frontPaths.map(item => (
+                                    <Route key={item.path as string} {...item}/>
                                 ))
                             }
+                            {
+                                examplePaths.map(item => (
+                                    <Route key={item.path as string} {...item} />
+                                ))
+                            }
+                            <Redirect from="/" to="/home"/>
                         </Switch>
                     </Suspense>
                 </Content>
