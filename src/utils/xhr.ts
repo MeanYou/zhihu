@@ -4,7 +4,7 @@ axios.defaults.withCredentials = true;
 let baseUrl;
 switch (process.env.NODE_ENV) {
   case 'development':
-    baseUrl = '/';
+    baseUrl = '/api';
     break;
   case 'production':
     baseUrl = '/';
@@ -18,13 +18,13 @@ switch (process.env.NODE_ENV) {
 }
 
 // create an axios instance
-const service = axios.create({
+const xhr = axios.create({
   baseURL: baseUrl, // api 的 base_url
   // timeout: 10000, // request timeout
 });
 
 // request interceptor
-service.interceptors.request.use(
+xhr.interceptors.request.use(
   // Do something before request is sent
   // if (store.getters.token) {
   //   config.headers['token'] = getToken()
@@ -41,7 +41,7 @@ service.interceptors.request.use(
 );
 
 // response interceptor
-service.interceptors.response.use(
+xhr.interceptors.response.use(
   /**
    * 下面的注释为通过在response里，自定义code来标示请求状态
    * 自定义不同code表示不同问题，对不同情况作出处理
@@ -77,4 +77,4 @@ service.interceptors.response.use(
 
 // export { requestJsonp };
 export { baseUrl };
-export default service;
+export default xhr;

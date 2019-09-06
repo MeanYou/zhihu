@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import store from './redux/store';
 // import Main from './pages/Main';
 // import Login from './pages/Login';
-import mock from 'mock';
+import mock from './mock';
 import './App.less';
 import PrivateRoute from './components/PrivateRoute';
 
