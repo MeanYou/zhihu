@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import Answer from '@/components/Answer';
+import QaItem from '@/components/QaItem';
 import useInitialize from '@/hooks/useInitialize';
 import xhr from '@/utils/xhr';
 
@@ -12,7 +12,7 @@ const { useEffect } = React;
 
 const Recommend = (props: RecommendProps & RouteComponentProps) => {
     useInitialize(async () => {
-        const res = await xhr.get('recommend?limit=10&offset=0');
+        const res = await xhr.get('/recommend?limit=10&offset=0');
         console.log(res);
     });
     useEffect(() => {
@@ -20,7 +20,7 @@ const Recommend = (props: RecommendProps & RouteComponentProps) => {
     }, []);
     return (
         <div>
-            {/* <Answer author="lyl" question={}/> */}
+            {/* <QaItem author="lyl" question={}/> */}
         </div>
     );
 }
