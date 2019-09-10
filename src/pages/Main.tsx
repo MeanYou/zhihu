@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Layout, Menu } from 'antd';
 import { Route, Switch, Link, RouteComponentProps, RouteProps, Redirect } from 'react-router-dom';
-import useInitialize from '@/hooks/useInitialize';
 
 const { Suspense } = React;
 const { Header, Content, Footer } = Layout;

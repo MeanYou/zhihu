@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 const PrivateRoute = (props:RouteProps) => {
     const token = Cookies.get('token');
-    const { component: C, ...rest } = props;
+    // const { component: C, ...rest } = props;
 
     return token ?
         <Route { ...props }/> :

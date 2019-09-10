@@ -1,15 +1,13 @@
+import { AnswerProps } from '@/common/CommonInterface';
+import xhr from '@/common/xhr';
 // store
 export interface State {
-    qaList: Array<QaItem>;
+    qaList: Array<AnswerProps>;
 }
 
 export const initialState: State = {
     qaList: []
 };
-
-export interface QaItem {
-    question: string;
-}
 
 // action
 // action constant
@@ -17,21 +15,21 @@ const CHANGE_QA_LIST = 'CHANGE_QA_LIST';
 // action type
 export type Action = {
     type: 'CHANGE_QA_LIST',
-    payload: Array<QaItem>
+    payload: Array<AnswerProps>
 }
 // 状态action
-export const changeHotItem = (qaItems: Array<QaItem>) => ({
+export const changeQaList = (qaList: Array<AnswerProps>) => ({
     type: CHANGE_QA_LIST,
-    payload: qaItems
+    payload: qaList
 })
 
 // reducer
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case CHANGE_QA_LIST:
             return {
                 ...state,
-                qaItems: action.payload
+                qaList: action.payload
             };
         default:
             return state;
@@ -39,3 +37,9 @@ export const reducer = (state: State, action: Action) => {
 }
 
 // 业务action
+export const getRecommendQaList = (offset: number, limit: number = 10) => async (dispath: any, getState: any) => {
+    const res = await xhr.get('/recommend', { params: { offset, limit } });
+    const qaList = res.data.map((item: any) => item.target);
+    console.log(qaList);
+    dispath(changeQaList(qaList));
+};

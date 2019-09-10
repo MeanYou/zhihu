@@ -32,4 +32,55 @@
    
    1. 推荐
    2. 热榜
+
+### 2. 发现
+   1. 暂无
+   
 ### 2. 示例：react hooks各种示例
+
+## 5. useReducer使用方式
+useReducer在[容器组件](https://www.jianshu.com/p/6fa2b21f5df3)中使用，在组件目录下新建store.ts文件，文件模板如下：
+```
+// store
+export interface State {
+   variable: string;
+}
+
+export const initialState: State = {
+   variable: ''
+};
+
+// action
+// action constant
+const CHANGE_VARIABLE = 'CHANGE_VARIABLE';
+// action type
+export type Action = {
+    type: 'CHANGE_VARIABLE',
+    payload: string
+}
+// 状态action
+export const changeVariable = (variable: string) => ({
+    type: CHANGE_VARIABLE,
+    payload: variable
+})
+
+// reducer
+export const reducer = (state: State, action: Action) => {
+    switch (action.type) {
+        case CHANGE_VARIABLE:
+            return {
+                ...state,
+                variable: action.payload
+            };
+        default:
+            return state;
+    }
+}
+
+// 业务action
+export const getVariableByApi = (param:string) => async (dispatch:any, getState:any) => {
+   // 也可以返回Promise
+   const res = await xhr.get('/api', {params: {param}});
+   dispatch(changeVariable(res.data));
+}
+```

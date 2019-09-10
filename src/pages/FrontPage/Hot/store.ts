@@ -26,7 +26,7 @@ export const changeHotItem = (hotItems: Array<HotItem>) => ({
 })
 
 // reducer
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case CHANGE_HOT_ITEMS:
             return {

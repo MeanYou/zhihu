@@ -1,5 +1,5 @@
-import xhr from '@/utils/xhr';
-import { crypto } from '@/utils/CommonUtil';
+import xhr from '@/common/xhr';
+import { crypto } from '@/common/CommonUtil';
 // store
 export interface State {
     loginType: 'vrf' | 'pwd';// 验证码登录，密码登录

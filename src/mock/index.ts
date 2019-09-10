@@ -1,6 +1,6 @@
 import mock from 'mockjs';
 import Cookies from 'js-cookie';
-import { crypto } from '@/utils/CommonUtil';
+import { crypto } from '@/common/CommonUtil';
 
 export default function() {
     mock.mock(/\/api\/auth\/verify*/, 'get', (option:any) => {

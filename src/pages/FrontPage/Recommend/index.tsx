@@ -2,7 +2,9 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import QaItem from '@/components/QaItem';
 import useInitialize from '@/hooks/useInitialize';
-import xhr from '@/utils/xhr';
+import useThunkReducer from '@/hooks/useThunkReducer';
+import { initialState, reducer, getRecommendQaList } from './store';
+import { Spin } from 'antd';
 
 export interface RecommendProps {
 
@@ -11,16 +13,27 @@ export interface RecommendProps {
 const { useEffect } = React;
 
 const Recommend = (props: RecommendProps & RouteComponentProps) => {
+    const [store, dispatch] = useThunkReducer(reducer, initialState);
+    const { qaList } = store;
+    console.log(qaList);
+
+    //　初始化获取推荐问答列表
     useInitialize(async () => {
-        const res = await xhr.get('/recommend?limit=10&offset=0');
-        console.log(res);
+        dispatch(getRecommendQaList(0));
     });
+    
     useEffect(() => {
 
     }, []);
+
     return (
         <div>
-            {/* <QaItem author="lyl" question={}/> */}
+            {
+                qaList.length ?
+                qaList.map(item => (
+                    <QaItem key={item.id} {...item} />
+                )) : <Spin/>
+            }
         </div>
     );
 }

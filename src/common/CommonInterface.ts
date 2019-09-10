@@ -28,7 +28,7 @@ export interface AuthorProps {
     name: string;// 用户名
     type: 'people';// 用户类型
     url: string;// 用户地址
-    url_token: string;// 用户地址token
+    url_token: string;// 用户查询token
     user_type: 'people';// 用户类型
 }
 
