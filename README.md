@@ -36,7 +36,7 @@
 ### 2. 发现
    1. 暂无
    
-### 2. 示例：react hooks各种示例
+### 3. 示例：react hooks各种示例
 
 ## 5. useReducer使用方式
 useReducer在[容器组件](https://www.jianshu.com/p/6fa2b21f5df3)中使用，在组件目录下新建store.ts文件，文件模板如下：

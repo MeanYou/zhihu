@@ -38,7 +38,7 @@ export const reducer = (state: State, action: Action): State => {
 
 // 业务action
 export const getRecommendQaList = (offset: number, limit: number = 10) => async (dispath: any, getState: any) => {
-    const res = await xhr.get('/recommend', { params: { offset, limit } });
+    const res = await xhr.get<any, any>('/recommend', { params: { offset, limit } });
     const qaList = res.data.map((item: any) => item.target);
     console.log(qaList);
     dispath(changeQaList(qaList));

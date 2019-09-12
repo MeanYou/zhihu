@@ -26,3 +26,71 @@
         white-space: nowrap;
     }
 }
+
+.author__detail {
+    overflow: visible;
+    position: relative;
+    width: 320px;
+    height: 170px;
+
+    .author__detail__avatar {
+        position: absolute;
+        top: -30px;
+        width: 64px;
+        height: 64px;
+        border-radius: 5px;
+    }
+
+    .author__detail__brief {
+        margin-left: 74px;
+        color: #1a1a1a;
+        line-height: 1;
+
+        >div:nth-child(1) {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        >div:nth-child(2) {
+            font-size: 14px;
+            font-weight: 400;
+            margin-top: 5px;
+        }
+    }
+
+    .author__detail__pieces {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        line-height: 1;
+        margin-top: 20px;
+
+        .author__detail__pieces__item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+
+
+            >span:nth-child(1) {
+                font-size: 14px;
+                color: #8590a6;
+            }
+
+            >span:nth-child(2) {
+                font-size: 18px;
+                font-weight: 600;
+                color: #1a1a1a;
+                margin-top: 5px;
+            }
+        }
+    }
+    .author__detail__operation {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+}

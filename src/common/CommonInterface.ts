@@ -15,6 +15,16 @@ export interface AnswerProps {
     voteup_count: number;// 点赞数
 }
 
+export interface QuestionProps {
+    created: number;// 创建时间
+    id: number;// 问题ID
+    isFollowing: false;// 是否关注该问题
+    question_type: string;// 问题类型
+    title: string;// 问题标题
+    type: 'question';// 类型：问题
+    url: string;// 问题地址
+}
+
 export interface AuthorProps {
     avatar_url: string;// 头像地址
     avatar_url_template: string;// 头像地址模板
@@ -31,14 +41,23 @@ export interface AuthorProps {
     url_token: string;// 用户查询token
     user_type: 'people';// 用户类型
 }
-
-export interface QuestionProps {
-    created: number;// 创建时间
-    id: number;// 问题ID
-    isFollowing: false;// 是否关注该问题
-    question_type: string;// 问题类型
-    title: string;// 问题标题
-    type: 'question';// 类型：问题
-    url: string;// 问题地址
+export interface AuthorDetailProps {
+    answer_count: number;// 回答数量
+    articles_count: number;// 文章数量
+    avatar_url: string;// 头像地址
+    avatar_url_template: string;// 头像模板
+    employments: any;// 职业信息
+    follower_count: number;// 粉丝数量
+    gender: 0|1;// 性别，0女1男
+    headline: string;// 签名
+    id: string;// 用户id
+    is_advertiser: boolean;// 是否是广告商
+    is_org: boolean;// 是否为机构
+    name: string;// 用户名
+    type: 'people';// 用户类型
+    url: string;// 用户地址
+    url_token: string;// 用户地址token
+    use_default_avatar: boolean;// 是否使用默认头像
+    user_type: 'people';// 用户类型
+    vip_info: { is_vip: boolean; rename_days: number; }// 用户VIP信息
 }
-
