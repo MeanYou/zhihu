@@ -1,0 +1,32 @@
+@import "../../../common/common.less";
+
+.answer-operator {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    color: #76839b;
+    line-height: 1;
+
+    >span {
+        display: inline-block;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 24px;
+    }
+
+    >.answer-operator__voteup, >.answer-operator__votedown {
+        padding: 10px 12px;
+        color: #0084ff;
+        background-color: rgba(0,132,255,.15);
+        border-radius: 3px;
+        font-size: 15px;
+    }
+    >.answer-operator__voteup {
+        margin-right: 5px;
+    }
+    >.answer-operator__votedown {
+        margin-right: 24px;
+    }
+}

@@ -21,7 +21,7 @@ const AuthorBrief = (props: AuthorItemProps) => {
         <div className={className} style={props.style || {}}>
             {
                 props.url_token ?
-                    <Popover content={<AuthorDetail urlToken={url_token} />}>
+                    <Popover content={<AuthorDetail urlToken={url_token} />} placement="bottomLeft">
                         <img className="author__brief__avatar" src={avatar_url} alt="avatar" />
                     </Popover> :
                     <img className="author__brief__avatar" src={avatar_url} alt="avatar" />
@@ -47,12 +47,12 @@ const AuthorDetail = (props: DetailProps) => {
     });
 
     return (
-        <div>
+        <div className="author__detail">
             {
                 detail ?
-                    <div className="author__detail">
+                    (<>
                         <div>
-                            <img className="author__detail__avatar" src={`${detail.avatar_url}`} />
+                            <img className="author__detail__avatar" src={`${detail.avatar_url}`} alt="" />
                             <div className="author__detail__brief">
                                 <div>{detail.name}</div>
                                 <div>{detail.headline}</div>
@@ -73,15 +73,15 @@ const AuthorDetail = (props: DetailProps) => {
                             </div>
                         </div>
                         <div className="author__detail__operation">
-                            <a target="_blank" href={detail.url}>
-                                <Button type="primary" size="large" style={{width: 150}}><Icon type="zhihu-circle" theme="filled" />看看TA</Button>
+                            <a target="_blank" rel="noopener noreferrer" href={detail.url}>
+                                <Button type="primary" style={{ width: 130 }}><Icon type="zhihu-circle" theme="filled" />看看TA</Button>
                             </a>
-                            <a target="_blank" href={`${detail.url}/answers`}>
-                                <Button size="large" style={{width: 150}}><Icon type="highlight" theme="filled" />看回答</Button>
+                            <a target="_blank" rel="noopener noreferrer" href={`${detail.url}/answers`}>
+                                <Button style={{ width: 130 }}><Icon type="highlight" theme="filled" />看回答</Button>
                             </a>
                         </div>
-                    </div> : <Spin />
-            }
+                    </>) : <Spin className="author__detail__loading"/>
+                }
         </div>
     );
 }

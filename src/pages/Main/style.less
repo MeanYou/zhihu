@@ -1,0 +1,56 @@
+@import "../../common/common.less";
+
+.app-layout {
+    background-color: @base-layout-color;
+    .app-header {
+        position: relative;
+        overflow: hidden;
+        background: @base-bg-color;
+        box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+        background-clip: content-box;
+        height: @menu-height;
+        padding: 0;
+
+        .app-menu {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            width: 1032px;
+            height: @menu-height;
+            padding: 0 16px;
+            margin: 0 auto;
+            transition: transform .3s;
+
+            .app-logo {
+                margin-right: 30px;
+            }
+
+            .app-menu__items {
+                line-height: @menu-height;
+                font-size: 15px;
+                .ant-menu-item > a {
+                    color: #8590a6;
+                }
+                .ant-menu-item-selected > a {
+                    color: #1890ff;
+                    font-weight: 700;
+                }
+                .ant-menu-item > a:hover {
+                    color: #1890ff;
+                }
+            }
+        }
+    }
+
+    .app-main {
+        position: relative;
+        overflow: hidden;
+        margin: 0 auto;
+        background: @base-layout-color;
+        .app-content {
+            width: 1000px;
+            margin-top: 10px;
+        }
+    }
+}

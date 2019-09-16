@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Icon, Popover } from 'antd';
-import { classNames } from '@/common/CommonUtil';
+import { classNames, formatNumber } from '@/common/CommonUtil';
+import './style.less';
 
 export interface AnswerOperatorProps {
     id: number;
@@ -13,22 +14,26 @@ export interface AnswerOperatorProps {
 }
 
 const AnswerOperator = (props: AnswerOperatorProps) => {
-    const { id, fullContentVisible, voteupCount, commentCount, className, style, onClickFoldUp } = props;
+    const { id, fullContentVisible, voteupCount, commentCount, className, style={}, onClickFoldUp } = props;
     const classnames = classNames(className, 'answer-operator');
     return (
         <div className={classnames} style={style}>
-            <span><Icon type="caret-up" />赞同&nbsp;{voteupCount}</span>
-            <span><Icon type="caret-down" /></span>
-            <span><Icon type="message" theme="filled" />{commentCount}条评论</span>
-            <span><Icon type="fire" theme="filled" />分享</span>
-            <span><Icon type="star" theme="filled" />收藏</span>
-            <span><Icon type="heart" theme="filled" />感谢</span>
+            <span className="answer-operator__voteup"><Icon type="caret-up" />赞同&nbsp;{formatNumber(voteupCount)}</span>
+            <span className="answer-operator__votedown"><Icon type="caret-down" /></span>
+            <span><Icon type="message" theme="filled" />&nbsp;{commentCount}条评论</span>
+            <span><Icon type="fire" theme="filled" />&nbsp;分享</span>
+            <span><Icon type="star" theme="filled" />&nbsp;收藏</span>
+            <span><Icon type="heart" theme="filled" />&nbsp;感谢</span>
             <Popover trigger="click" content={<MoreOperation />}>
                 <span>···</span>
             </Popover>
             {
                 fullContentVisible ?
-                    <span onClick={onClickFoldUp}>收起<Icon type="up" /></span> : null
+                    <span
+                        className=""
+                        onClick={onClickFoldUp}>
+                            收起<Icon type="up" />
+                    </span> : null
             }
 
         </div>

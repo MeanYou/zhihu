@@ -1,4 +1,54 @@
+@import "../../common/common.less";
+
 .qa {
-    background-color: #f6f6f6;
+    background-color: @base-bg-color;
     position: relative;
+    border-bottom: 1px solid @base-border-color;
+    padding: 20px;
+    box-sizing: border-box;
+    line-height: 1;
+
+    .qa__question {
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 10px;
+
+        >a {
+            color: #1a1a1a;
+        }
+
+        >a:hover {
+            color: #175199;
+        }
+    }
+
+    .qa__answer {
+        margin-top: 10px;
+
+        .qa__answer__excerpt {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .qa__answer__excerpt__img {
+                border-radius: 5px;
+            }
+
+            .qa__answer__excerpt__content {
+                color: #646464;
+                font-size: 15px;
+                line-height: 1.67;
+            }
+        }
+
+        .qa__answer__content {
+            color: #646464;
+            font-size: 15px;
+            line-height: 1.67;
+        }
+    }
+
+    .qa__operator {
+        margin-top: 10px;
+    }
 }

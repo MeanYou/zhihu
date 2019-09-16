@@ -6,6 +6,7 @@ import useThunkReducer from '@/hooks/useThunkReducer';
 import { reducer, initialState, changeFullContentVisible } from './store';
 import AnswerOperator from './AnswerOperator';
 import './style.less';
+import { classNames } from '@/common/CommonUtil';
 
 const { useCallback } = React;
 
@@ -15,7 +16,8 @@ export interface QaItemProps extends AnswerProps {
 }
 
 const QaItem = (props: QaItemProps) => {
-    const { id, author, question, thumbnail, excerpt, content, voteup_count, comment_count } = props;
+    const { id, author, question, thumbnail, excerpt, content, voteup_count, comment_count, className, style = {} } = props;
+    const classnames = classNames(className, 'qa');
 
     const [store, dispatch] = useThunkReducer(reducer, initialState);
     const { authorVisible, fullContentVisible, toggleFullContentVisible, commentVisible,
@@ -29,7 +31,7 @@ const QaItem = (props: QaItemProps) => {
     }, [dispatch]);
 
     return (
-        <div className="qa">
+        <div className={classnames} style={style}>
             {
                 authorVisible ?
                     <AuthorBrief {...author} /> : null
@@ -45,8 +47,13 @@ const QaItem = (props: QaItemProps) => {
                         ) :
                         (
                             <div onClick={showFullContent} className="qa__answer__excerpt">
-                                <img src={thumbnail} alt="" />
-                                <div dangerouslySetInnerHTML={{ __html: excerpt }}></div>
+                                {thumbnail && <img className="qa__answer__excerpt__img" src={thumbnail} alt="" />}
+                                <div
+                                    style={{ width: thumbnail ? 440 : '100%' }}
+                                    className="qa__answer__excerpt__content"
+                                    dangerouslySetInnerHTML={{
+                                        __html: `${excerpt}<span style="color: #175199; cursor: pointer;">&nbsp;阅读全文∨</span>`
+                                    }}></div>
                             </div>
                         )
                 }
@@ -56,6 +63,7 @@ const QaItem = (props: QaItemProps) => {
                 voteupCount={voteup_count}
                 commentCount={comment_count}
                 fullContentVisible={fullContentVisible}
+                className="qa__operator"
                 onClickFoldUp={handleClickFoldUp} />
         </div>
     );
