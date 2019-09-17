@@ -73,6 +73,7 @@ const Main = (props: RouteComponentProps) => {
     })();
 
     const handleScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
+        console.log(1111111);
         dispatch(changeScrolltop(e.currentTarget.scrollTop));
     }, [dispatch]);
     return (

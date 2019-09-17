@@ -1,3 +1,6 @@
+/**
+ * 作为局部store的thunk中间件替代品
+ */
 import * as React from 'react';
 
 type Reducer<S, A> = (prevState: S, action: A) => S;

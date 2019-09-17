@@ -13,6 +13,8 @@ import { classNames } from '@/common/CommonUtil';
 const { useCallback, useRef, useMemo, useEffect } = React;
 
 export interface QaItemProps extends AnswerProps {
+    fixFlag: boolean;
+    onFixFlagChange(): void;
     className?: string;
     style?: React.CSSProperties;
 }
@@ -25,7 +27,7 @@ const selector = (state:StoreProps) => {
 }
 
 const QaItem = (props: QaItemProps) => {
-    const { id, author, question, thumbnail, excerpt, content, voteup_count, comment_count, className, style = {} } = props;
+    const { id, author, question, thumbnail, excerpt, content, voteup_count, comment_count, fixFlag, onFixFlagChange, className, style = {} } = props;
     const classnames = classNames(className, 'qa');
     const qaRef = useRef<HTMLDivElement>(null);
     const { scrollTop } = useSelector(selector, shallowEqual);
@@ -37,10 +39,12 @@ const QaItem = (props: QaItemProps) => {
 
     const showFullContent = useCallback(() => {
         dispatch(changeFullContentVisible(true));
+        onFixFlagChange();
     }, [dispatch]);
     const handleClickFoldUp = useCallback(() => {
         dispatch(changeFullContentVisible(false));
         dispatch(changeShouldItemFix(false));
+        onFixFlagChange();
     }, [dispatch]);
 
     // 组件显示答案全部内容以及滚动的时候触发
@@ -61,22 +65,7 @@ const QaItem = (props: QaItemProps) => {
                 }
             }
         }
-    }, [fullContentVisible, scrollTop]);
-
-    // const shouldItemFix = useMemo(() => {
-    //     let fixed = false;
-    //     if(fullContentVisible) {
-    //         if(qaRef.current) {
-    //             console.log(qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop);
-    //             console.log(qaRef.current.clientHeight);
-    //             const itemBottomScrollTop = qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop + qaRef.current.clientHeight;
-    //             if(itemBottomScrollTop - scrollTop - document.documentElement.clientHeight > 0) {
-    //                 fixed = true;
-    //             }
-    //         }
-    //     }
-    //     return fixed;
-    // }, [fullContentVisible, scrollTop]);
+    }, [fullContentVisible, scrollTop, fixFlag]);
 
     return (
         <div className={classnames} style={style} ref={qaRef}>
