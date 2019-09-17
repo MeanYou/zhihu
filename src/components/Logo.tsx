@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { classNames } from '@/common/CommonUtil';
 
 export interface LogoProps {
     className?: string;

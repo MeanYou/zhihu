@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Layout, Menu } from 'antd';
+import { useDispatch } from 'react-redux';
 import { Route, Switch, Link, RouteComponentProps, RouteProps, Redirect } from 'react-router-dom';
+import { changeScrolltop } from '@/redux/actions';
 import Logo from '@/components/Logo';
 import './style.less';
 
@@ -54,6 +56,7 @@ const examplePaths: Array<RouteProps & { name?: string }> = [
 ];
 
 const Main = (props: RouteComponentProps) => {
+    const dispatch = useDispatch();
     let selectedKeys = (() => {
         let keys: Array<string> = [];
         frontPaths.forEach(item => {
@@ -68,8 +71,12 @@ const Main = (props: RouteComponentProps) => {
         })
         return keys;
     })();
+
+    const handleScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
+        dispatch(changeScrolltop(e.currentTarget.scrollTop));
+    }, [dispatch]);
     return (
-        <div>
+        <div onScroll={handleScroll} className="main">
             <Layout className="app-layout">
                 <Header className="app-header">
                     <div className="app-menu">

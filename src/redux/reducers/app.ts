@@ -1,4 +1,4 @@
-import { CHANGE_ISLOGIN, SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING } from '../actionTypes';
+import { CHANGE_ISLOGIN, SET_USERNAME, ADD_TODO, SHOW_LOADING, HIDE_LOADING, CHANGE_SCROLLTOP } from '../actionTypes';
 import { ActionProps } from '../actions';
 
 export interface StateProps {
@@ -7,6 +7,7 @@ export interface StateProps {
     todos: string[];
     showLoading: boolean;
     loadingText: string;
+    scrollTop: number;
 }
 
 const initialState = {
@@ -14,7 +15,8 @@ const initialState = {
     username: '',
     todos: [],
     showLoading: false,
-    loadingText: ''
+    loadingText: '',
+    scrollTop: 0
 };
 
 export default function(state:StateProps = initialState, action:ActionProps) {
@@ -50,6 +52,12 @@ export default function(state:StateProps = initialState, action:ActionProps) {
                 showLoading: false,
                 loadingText: ''
             }
+        }
+        case CHANGE_SCROLLTOP: {
+            return {
+                ...state,
+                scrollTop: action.payload
+            };
         }
         default:
             return state;

@@ -2,7 +2,7 @@
 export interface State {
     authorVisible: boolean;
     fullContentVisible: boolean;
-    toggleFullContentVisible: boolean;
+    shouldItemFix: boolean;
     commentVisible: boolean;
     toggleCommentVisible: boolean;
     commentModalVisible: boolean;
@@ -11,7 +11,7 @@ export interface State {
 export const initialState: State = {
     authorVisible: true,
     fullContentVisible: false,
-    toggleFullContentVisible: false,
+    shouldItemFix: false,
     commentVisible: false,
     toggleCommentVisible: false,
     commentModalVisible: false
@@ -21,7 +21,7 @@ export const initialState: State = {
 // action constant
 const CHANGE_AUTHOR_VISIBLE = 'CHANGE_AUTHOR_VISIBLE';
 const CHANGE_FULL_CONTENT_VISIBLE = 'CHANGE_FULL_CONTENT_VISIBLE';
-const CHANGE_TOGGLE_FULL_CONTENT_VISIBLE = 'CHANGE_TOGGLE_FULL_CONTENT_VISIBLE';
+const CHANGE_SHOULD_ITEM_FIX = 'CHANGE_SHOULD_ITEM_FIX';
 const CHANGE_COMMENT_VISIBLE = 'CHANGE_COMMENT_VISIBLE';
 const CHANGE_TOGGLE_COMMENT_VISIBLE = 'CHANGE_TOGGLE_COMMENT_VISIBLE';
 const CHANGE_COMMENT_MODAL_VISIBLE = 'CHANGE_COMMENT_MODAL_VISIBLE';
@@ -33,7 +33,7 @@ export type Action = {
     type: 'CHANGE_FULL_CONTENT_VISIBLE',
     payload: boolean;
 } | {
-    type: 'CHANGE_TOGGLE_FULL_CONTENT_VISIBLE',
+    type: 'CHANGE_SHOULD_ITEM_FIX',
     payload: boolean;
 } | {
     type: 'CHANGE_COMMENT_VISIBLE',
@@ -54,9 +54,9 @@ export const changeFullContentVisible = (show: boolean) => ({
     type: CHANGE_FULL_CONTENT_VISIBLE,
     payload: show
 });
-export const changeToggleFullContentVisible = (show: boolean) => ({
-    type: CHANGE_TOGGLE_FULL_CONTENT_VISIBLE,
-    payload: show
+export const changeShouldItemFix = (fix:boolean) => ({
+    type: CHANGE_SHOULD_ITEM_FIX,
+    payload: fix
 });
 export const changeCommentVisible = (show: boolean) => ({
     type: CHANGE_COMMENT_VISIBLE,
@@ -85,10 +85,10 @@ export const reducer = (state: State, action: Action): State => {
                 ...state,
                 fullContentVisible: action.payload
             };
-        case CHANGE_TOGGLE_FULL_CONTENT_VISIBLE:
+        case CHANGE_SHOULD_ITEM_FIX:
             return {
                 ...state,
-                toggleFullContentVisible: action.payload
+                shouldItemFix: action.payload
             };
         case CHANGE_COMMENT_VISIBLE:
             return {
