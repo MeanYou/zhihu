@@ -8,6 +8,88 @@
 ## 2. 关于优化
 ### 1. useCallback应该何时使用？
 无意义的优化是万恶之源，我在这篇文章里看到的[应该何时使用useCallback和useMemo](https://jancat.github.io/post/2019/translation-usememo-and-usecallback/)，我们判断一个函数是否需要缓存，要看它是否对性能造成了影响，一般情况下我们不用考虑太多优化，但是原则上为了避免不必要的重渲染，我们在DOM以及子组件的callback函数中默认使用useCallback(虽然这在简单组件中并没有提升性能，而且会增加代码量)。
+### 2. 关于防抖和节流
+曾经听到防抖和节流，不以为意，以为只会在字面上的含义情况下使用，防止用户手抖多点一次提交就完了，直到onScroll需要和redux联合使用的时候才发现页面滚动卡顿需要防抖和节流来优化。
+首先是防抖的基本示例，效果为500ms以内被触发的函数不会执行，直到500ms后没有操作才执行：
+```
+// 简单的防抖动函数
+function debounce(func, wait) {
+    // 定时器变量
+    var timeout;
+    return function() {
+        // 每次触发 scroll handler 时先清除定时器
+        clearTimeout(timeout);
+        // 指定 xx ms 后触发真正想进行的操作 handler
+        timeout = setTimeout(func, wait);
+    };
+};
+ 
+// 实际想绑定在 scroll 事件上的 handler
+function realFunc(){
+    console.log("Success");
+}
+ 
+// 采用了防抖动
+window.addEventListener('scroll',debounce(realFunc,500));
+// 没采用防抖动
+window.addEventListener('scroll',realFunc);
+```
+好点的封装
+```
+// 防抖动函数
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
+ 
+var myEfficientFn = debounce(function() {
+    // 滚动中的真正的操作
+}, 250);
+ 
+// 绑定监听
+window.addEventListener('resize', myEfficientFn);
+```
+但是防抖会有一些问题，比如我一直滚动的时候，希望滚动过程中动态加载出懒加载的图片和请求新的数据，这种情况下我们需要以一定的频率触发函数，这种技巧叫做节流，只允许函数在一定ms内执行一次，与防抖相比，节流函数保证在x毫秒内至少执行一次时间handler，其实就是多了一个mustRun属性，看下示例：
+```
+// 简单的节流函数
+function throttle(func, wait, mustRun) {
+    var timeout,
+        startTime = new Date();
+ 
+    return function() {
+        var context = this,
+            args = arguments,
+            curTime = new Date();
+ 
+        clearTimeout(timeout);
+        // 如果达到了规定的触发时间间隔，触发 handler
+        if(curTime - startTime >= mustRun){
+            func.apply(context,args);
+            startTime = curTime;
+        // 没达到触发间隔，重新设定定时器
+        }else{
+            timeout = setTimeout(func, wait);
+        }
+    };
+};
+// 实际想绑定在 scroll 事件上的 handler
+function realFunc(){
+    console.log("Success");
+}
+// 采用了节流函数
+window.addEventListener('scroll',throttle(realFunc,500,1000));
+```
+
 
 ## 3. 关于业务代码
 

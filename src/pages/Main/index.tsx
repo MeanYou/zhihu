@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Layout, Menu } from 'antd';
 import { useDispatch } from 'react-redux';
 import { Route, Switch, Link, RouteComponentProps, RouteProps, Redirect } from 'react-router-dom';
+import { useDebouncedCallback, useDebounce } from 'use-debounce';
 import { changeScrolltop } from '@/redux/actions';
 import Logo from '@/components/Logo';
 import './style.less';
 
-const { Suspense } = React;
+const { Suspense, useEffect } = React;
 const { Header, Content, Footer } = Layout;
 
 // route信息
@@ -71,10 +72,13 @@ const Main = (props: RouteComponentProps) => {
         })
         return keys;
     })();
-
+    const [debounceCallback] = useDebouncedCallback((scrollTop:number) => {
+        dispatch(changeScrolltop(scrollTop));
+    }, 250, {maxWait: 500});
     const handleScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
-        console.log(1111111);
-        dispatch(changeScrolltop(e.currentTarget.scrollTop));
+        const scrollTop = e.currentTarget.scrollTop;
+        debounceCallback(scrollTop);
+        // dispatch(changeScrolltop(scrollTop));
     }, [dispatch]);
     return (
         <div onScroll={handleScroll} className="main">

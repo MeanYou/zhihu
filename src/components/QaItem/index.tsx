@@ -51,17 +51,20 @@ const QaItem = (props: QaItemProps) => {
     useEffect(() => {
         if(fullContentVisible) {
             if(qaRef.current) {
-                console.log(qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop);
-                console.log(qaRef.current.clientHeight);
                 // 当前回答距main顶部的距离
                 const itemTopOffsetTop = qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop;
                 // 当前回答距main底部的距离
                 const itemBottomOffsetTop = itemTopOffsetTop + qaRef.current.clientHeight;
                 // 当前scrollTop与视口高度之和位于当前回答的顶部和底部之间则fix
                 if((scrollTop + document.documentElement.clientHeight > itemTopOffsetTop + 150) && (scrollTop + document.documentElement.clientHeight < itemBottomOffsetTop)) {
-                    dispatch(changeShouldItemFix(true));
+                    if(!shouldItemFix) {
+                        dispatch(changeShouldItemFix(true));
+                    }
                 } else {
-                    dispatch(changeShouldItemFix(false));
+                    if(shouldItemFix) {
+                        dispatch(changeShouldItemFix(false));
+                    }
+                    
                 }
             }
         }

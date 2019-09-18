@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';  //引用AES源码js
 
 // 获取url参数
-export const getQueryString = (search:string, name:string) => {
+export const getQueryString = (search: string, name: string) => {
     let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
     let r = search.substr(1).match(reg);
     if (r != null) {
@@ -29,7 +29,7 @@ export const getBrowserVersions = () => {
 // base64编码解码
 export const Base64 = {
     _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-",
-    encodeUrlSafeStr: function(e:string) {
+    encodeUrlSafeStr: function (e: string) {
         let t = "";
         let n, r, i, s, o, u, a;
         let f = 0;
@@ -51,12 +51,12 @@ export const Base64 = {
         }
         return t
     },
-    decodeUrlSafeStr: function(e:string) {
+    decodeUrlSafeStr: function (e: string) {
         let t = "";
         let n, r, i;
         let s, o, u, a;
         let f = 0;
-        e = e.replace('/[^A-Za-z0-9_-]/g',"");
+        e = e.replace('/[^A-Za-z0-9_-]/g', "");
         while (f < e.length) {
             s = this._keyStr.indexOf(e.charAt(f++));
             o = this._keyStr.indexOf(e.charAt(f++));
@@ -76,7 +76,7 @@ export const Base64 = {
         t = this._utf8_decode(t);
         return t
     },
-    _utf8_encode: function(e:string) {
+    _utf8_encode: function (e: string) {
         e = e.replace(/rn/g, "n");
         let t = "";
         for (let n = 0; n < e.length; n++) {
@@ -94,7 +94,7 @@ export const Base64 = {
         }
         return t
     },
-    _utf8_decode: function(e:string) {
+    _utf8_decode: function (e: string) {
         let t = "";
         let n = 0;
         let r = 0;
@@ -119,8 +119,8 @@ export const Base64 = {
         }
         return this._trimUnkonwn(t);
     },
-    _trimUnkonwn: function(str:string):string {
-        if(str.endsWith('}') || str.endsWith(']')) {
+    _trimUnkonwn: function (str: string): string {
+        if (str.endsWith('}') || str.endsWith(']')) {
             return str;
         } else {
             return this._trimUnkonwn(str.substr(0, str.length - 1));
@@ -128,12 +128,12 @@ export const Base64 = {
     }
 };
 // 根据图片地址获取base64编码
-export const getImgBase64 = (url:string, outputFormat:string) => {
-    let canvas:HTMLCanvasElement | null = document.createElement('canvas');
+export const getImgBase64 = (url: string, outputFormat: string) => {
+    let canvas: HTMLCanvasElement | null = document.createElement('canvas');
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         img.src = url;
         img.onload = function () {
             (canvas as HTMLCanvasElement).height = img.height;
@@ -153,7 +153,7 @@ export const getImgBase64 = (url:string, outputFormat:string) => {
 export const crypto = {
     key: 'hzdftxrjjsyxgsnb',
     iv: '0123456789ABCDEF',
-    decrypt: function(word:string) {
+    decrypt: function (word: string) {
         const key = CryptoJS.enc.Utf8.parse(this.key);
         const iv = CryptoJS.enc.Utf8.parse(this.iv);
         const decrypt = CryptoJS.AES.decrypt(word, key, {
@@ -163,7 +163,7 @@ export const crypto = {
         });
         return decrypt.toString(CryptoJS.enc.Utf8).toString();
     },
-    encrypt: function(word:string) {
+    encrypt: function (word: string) {
         const key = CryptoJS.enc.Utf8.parse(this.key);
         const iv = CryptoJS.enc.Utf8.parse(this.iv);
         let srcs = CryptoJS.enc.Utf8.parse(word);
@@ -176,22 +176,22 @@ export const crypto = {
     }
 };
 // 字符串转字节数组
-export const stringToByte = (str:string) => {
+export const stringToByte = (str: string) => {
     let bytes = [];
     let len, c;
     len = str.length;
-    for(let i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
         c = str.charCodeAt(i);
-        if(c >= 0x010000 && c <= 0x10FFFF) {
+        if (c >= 0x010000 && c <= 0x10FFFF) {
             bytes.push(((c >> 18) & 0x07) | 0xF0);
             bytes.push(((c >> 12) & 0x3F) | 0x80);
             bytes.push(((c >> 6) & 0x3F) | 0x80);
             bytes.push((c & 0x3F) | 0x80);
-        } else if(c >= 0x000800 && c <= 0x00FFFF) {
+        } else if (c >= 0x000800 && c <= 0x00FFFF) {
             bytes.push(((c >> 12) & 0x0F) | 0xE0);
             bytes.push(((c >> 6) & 0x3F) | 0x80);
             bytes.push((c & 0x3F) | 0x80);
-        } else if(c >= 0x000080 && c <= 0x0007FF) {
+        } else if (c >= 0x000080 && c <= 0x0007FF) {
             bytes.push(((c >> 6) & 0x1F) | 0xC0);
             bytes.push((c & 0x3F) | 0x80);
         } else {
@@ -200,19 +200,19 @@ export const stringToByte = (str:string) => {
     }
     return bytes;
 };
-export const byteToString = (arr:any[]) => {
-    if(typeof arr === 'string') {
+export const byteToString = (arr: any[]) => {
+    if (typeof arr === 'string') {
         return arr;
     }
     let str = '',
         _arr = arr;
-    for(let i = 0; i < _arr.length; i++) {
+    for (let i = 0; i < _arr.length; i++) {
         let one = _arr[i].toString(2),
             v = one.match(/^1+?(?=0)/);
-        if(v && one.length === 8) {
+        if (v && one.length === 8) {
             let bytesLength = v[0].length;
             let store = _arr[i].toString(2).slice(7 - bytesLength);
-            for(let st = 1; st < bytesLength; st++) {
+            for (let st = 1; st < bytesLength; st++) {
                 store += _arr[st + i].toString(2).slice(2);
             }
             str += String.fromCharCode(parseInt(store, 2));
@@ -224,7 +224,7 @@ export const byteToString = (arr:any[]) => {
     return str;
 }
 // 组合classnames
-export const classNames = (...args:any) => {
+export const classNames = (...args: any) => {
     const hasOwn = {}.hasOwnProperty;
     const classes = [];
 
@@ -262,3 +262,36 @@ export const formatNumber = (number: number) => {
         return (number / 1000).toFixed(0) + 'K';
     }
 }
+// 防抖和节流
+export const debounce = <T extends (...args: any[]) => any>(func: T, wait: number, immediate: boolean = false) => {
+    let timeout: NodeJS.Timeout | null;
+    return function (this: any) {
+        let context: any = this;
+        let args = arguments;
+        const later = function () {
+            timeout = null;
+            !immediate && func.apply(context, args);
+        }
+        let callNow = immediate && !timeout;
+        timeout && clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        callNow && func.apply(context, args);
+    };
+};
+export const throttling = <T extends (...args: any[]) => any>(func: T, wait: number, mustRun: number) => {
+    let timeout: NodeJS.Timeout | null;
+    let startTime = new Date().getTime();
+    return function(this:any) {
+        let context = this;
+        let args = arguments;
+        let curTime = new Date().getTime();
+
+        timeout && clearTimeout(timeout);
+        if (curTime - startTime >= mustRun) {
+            func.apply(context, args);
+            startTime = curTime;
+        } else {
+            timeout = setTimeout(func, wait);
+        }
+    };
+};

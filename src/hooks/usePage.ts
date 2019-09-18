@@ -2,8 +2,13 @@ import * as React from 'react';
 
 const { useRef } = React;
 
-const usePage = () => {
-    const pageRef = useRef(0);
+export interface PageProps {
+    pageNum: number;
+    pageSize: number;
+    pageLoading: boolean;
+}
+const usePage = (pageNum = 0, pageSize = 10, pageLoading = false) => {
+    const pageRef = useRef<PageProps>({pageNum, pageSize, pageLoading});
     return pageRef.current;
 };
 

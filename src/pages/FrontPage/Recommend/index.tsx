@@ -28,20 +28,26 @@ const Recommend = (props: RecommendProps & RouteComponentProps) => {
     const listRef = useRef<HTMLDivElement>(null);
 
     //　初始化获取推荐问答列表
-    let pageNum = usePage();
+    let page = usePage();
     useInitialize(async () => {
-        dispatch(getRecommendQaList(pageNum));
-        pageNum += 10;
+        dispatch(getRecommendQaList(page.pageNum)).then(() => {
+            page.pageLoading = false;
+            page.pageNum += 10;
+        });
     });
 
+    // 滚动时执行
     useEffect(() => {
-        console.log(111)
         if (listRef.current) {
             const topOffsetTop = listRef.current.offsetHeight + (listRef.current.offsetParent as HTMLDivElement).offsetHeight;
             const bottomOffsetTop = topOffsetTop + listRef.current.clientHeight;
-            if(bottomOffsetTop + 300 > scrollTop) {
-                dispatch(getRecommendQaList(pageNum));
-                pageNum += 10;
+            if(page.pageLoading) return;// 加载数据时不执行
+            if (bottomOffsetTop - 100 < scrollTop + document.documentElement.clientHeight) {
+                page.pageLoading = true;
+                dispatch(getRecommendQaList(page.pageNum)).then(() => {
+                    page.pageLoading = false;
+                    page.pageNum += 10;
+                });
             }
         }
     }, [scrollTop]);
