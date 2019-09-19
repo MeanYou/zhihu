@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { StoreProps } from '@/redux/reducers';
 import { AnswerProps } from '@/common/CommonInterface';
 import AuthorBrief from './AuthorBrief';
 import { Link } from 'react-router-dom';
@@ -9,6 +7,7 @@ import { reducer, initialState, changeFullContentVisible, changeShouldItemFix } 
 import AnswerOperator from './AnswerOperator';
 import './style.less';
 import { classNames } from '@/common/CommonUtil';
+import { useDebouncedCallback, useDebounce } from 'use-debounce';
 
 const { useCallback, useRef, useMemo, useEffect } = React;
 
@@ -19,19 +18,10 @@ export interface QaItemProps extends AnswerProps {
     style?: React.CSSProperties;
 }
 
-// redux获取scrollTop
-const selector = (state:StoreProps) => {
-    return {
-        scrollTop: state.app.scrollTop
-    };
-}
-
 const QaItem = (props: QaItemProps) => {
     const { id, author, question, thumbnail, excerpt, content, voteup_count, comment_count, fixFlag, onFixFlagChange, className, style = {} } = props;
     const classnames = classNames(className, 'qa');
     const qaRef = useRef<HTMLDivElement>(null);
-    const { scrollTop } = useSelector(selector, shallowEqual);
-    const globalDispatch = useDispatch();
 
     const [store, dispatch] = useThunkReducer(reducer, initialState);
     const { authorVisible, fullContentVisible, shouldItemFix, commentVisible,
@@ -47,28 +37,43 @@ const QaItem = (props: QaItemProps) => {
         onFixFlagChange();
     }, [dispatch]);
 
-    // 组件显示答案全部内容以及滚动的时候触发
-    useEffect(() => {
-        if(fullContentVisible) {
-            if(qaRef.current) {
-                // 当前回答距main顶部的距离
-                const itemTopOffsetTop = qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop;
-                // 当前回答距main底部的距离
-                const itemBottomOffsetTop = itemTopOffsetTop + qaRef.current.clientHeight;
-                // 当前scrollTop与视口高度之和位于当前回答的顶部和底部之间则fix
-                if((scrollTop + document.documentElement.clientHeight > itemTopOffsetTop + 150) && (scrollTop + document.documentElement.clientHeight < itemBottomOffsetTop)) {
-                    if(!shouldItemFix) {
-                        dispatch(changeShouldItemFix(true));
-                    }
-                } else {
-                    if(shouldItemFix) {
-                        dispatch(changeShouldItemFix(false));
-                    }
-                    
-                }
-            }
+    // mount之后执行副作用，滚动时触发防抖函数
+    const [debouncedCallback] = useDebouncedCallback(() => {
+        if (fullContentVisible && qaRef.current) {
+            // 当前回答顶部距layout content的距离
+            const itemTopOffsetTop = qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop;
+            // 当前回答底部距layout content的距离
+            const itemBottomOffsetTop = itemTopOffsetTop + qaRef.current.clientHeight;
         }
-    }, [fullContentVisible, scrollTop, fixFlag]);
+    }, 250, { maxWait: 250 });
+    useEffect(() => {
+        window.addEventListener('scroll', debouncedCallback);
+        return () => {
+            window.removeEventListener('scroll', debouncedCallback);
+        }
+    }, []);
+    // 组件显示答案全部内容以及滚动的时候触发
+    // useEffect(() => {
+    //     if(fullContentVisible) {
+    //         if(qaRef.current) {
+    //             // 当前回答距main顶部的距离
+    //             const itemTopOffsetTop = qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop;
+    //             // 当前回答距main底部的距离
+    //             const itemBottomOffsetTop = itemTopOffsetTop + qaRef.current.clientHeight;
+    //             // 当前scrollTop与视口高度之和位于当前回答的顶部和底部之间则fix
+    //             if((scrollTop + document.documentElement.clientHeight > itemTopOffsetTop + 150) && (scrollTop + document.documentElement.clientHeight < itemBottomOffsetTop)) {
+    //                 if(!shouldItemFix) {
+    //                     dispatch(changeShouldItemFix(true));
+    //                 }
+    //             } else {
+    //                 if(shouldItemFix) {
+    //                     dispatch(changeShouldItemFix(false));
+    //                 }
+
+    //             }
+    //         }
+    //     }
+    // }, [fullContentVisible, scrollTop, fixFlag]);
 
     return (
         <div className={classnames} style={style} ref={qaRef}>

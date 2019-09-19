@@ -57,7 +57,6 @@ const examplePaths: Array<RouteProps & { name?: string }> = [
 ];
 
 const Main = (props: RouteComponentProps) => {
-    const dispatch = useDispatch();
     let selectedKeys = (() => {
         let keys: Array<string> = [];
         frontPaths.forEach(item => {
@@ -72,16 +71,16 @@ const Main = (props: RouteComponentProps) => {
         })
         return keys;
     })();
-    const [debounceCallback] = useDebouncedCallback((scrollTop:number) => {
-        dispatch(changeScrolltop(scrollTop));
-    }, 250, {maxWait: 500});
-    const handleScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
-        const scrollTop = e.currentTarget.scrollTop;
-        debounceCallback(scrollTop);
-        // dispatch(changeScrolltop(scrollTop));
-    }, [dispatch]);
+    // const [debounceCallback] = useDebouncedCallback((scrollTop:number) => {
+    //     dispatch(changeScrolltop(scrollTop));
+    // }, 250, {maxWait: 500});
+    // const handleScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    //     const scrollTop = e.currentTarget.scrollTop;
+    //     debounceCallback(scrollTop);
+    //     // dispatch(changeScrolltop(scrollTop));
+    // }, [dispatch]);
     return (
-        <div onScroll={handleScroll} className="main">
+        <div className="main">
             <Layout className="app-layout">
                 <Header className="app-header">
                     <div className="app-menu">

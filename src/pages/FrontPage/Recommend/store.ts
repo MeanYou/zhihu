@@ -41,7 +41,7 @@ export const reducer = (state: State, action: Action): State => {
 export const getRecommendQaList = (offset: number, limit: number = 10) => (dispatch: any, getState: any) => {
     return new Promise(async(resolve, reject) => {
         const res = await xhr.get<any, any>('/recommend', { params: { offset, limit } });
-        const qaList = res.data.map((item: any) => item.target);
+        const qaList = res.data.filter((item:any) => item.target.question).map((item: any) => item.target);
         const list = [...getState().qaList, ...qaList];
         dispatch(changeQaList(list));
         resolve(true);

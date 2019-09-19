@@ -89,6 +89,8 @@ function realFunc(){
 // 采用了节流函数
 window.addEventListener('scroll',throttle(realFunc,500,1000));
 ```
+### 3. 需要再次优化的滚动
+给div绑定onScroll并dispatch的方式对性能过于不友好，决定通过使用window.addEventListener绑定删除事件，当然，防抖还在
 
 
 ## 3. 关于业务代码
