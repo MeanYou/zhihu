@@ -37,43 +37,37 @@ const QaItem = (props: QaItemProps) => {
         onFixFlagChange();
     }, [dispatch]);
 
-    // mount之后执行副作用，滚动时触发防抖函数
-    const [debouncedCallback] = useDebouncedCallback(() => {
+    // 判断QaItem是否应该浮动
+    const judgeShouldItemFix = () => {
         if (fullContentVisible && qaRef.current) {
             // 当前回答顶部距layout content的距离
             const itemTopOffsetTop = qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop;
             // 当前回答底部距layout content的距离
             const itemBottomOffsetTop = itemTopOffsetTop + qaRef.current.clientHeight;
+            console.log(itemTopOffsetTop);
+            console.log(itemBottomOffsetTop);
+            const windowBottomOffsetTop = window.pageYOffset + document.documentElement.clientHeight;
+            // 窗口底部距离body顶部已滚动像素位于item的顶部+300和底部之间，则fix，否则fix的情况下修改为不fix
+            if ((windowBottomOffsetTop > itemTopOffsetTop + 300) && (windowBottomOffsetTop < itemBottomOffsetTop)) {
+                dispatch(changeShouldItemFix(true));
+            } else {
+                shouldItemFix && dispatch(changeShouldItemFix(false));
+            }
         }
-    }, 250, { maxWait: 250 });
+    }
+    // 获取QaItem滚动时防抖函数
+    const [debouncedCallback] = useDebouncedCallback(judgeShouldItemFix, 250, { maxWait: 250 });
+    // mount之后执行副作用，滚动时触发防抖函数
     useEffect(() => {
         window.addEventListener('scroll', debouncedCallback);
         return () => {
             window.removeEventListener('scroll', debouncedCallback);
         }
     }, []);
-    // 组件显示答案全部内容以及滚动的时候触发
-    // useEffect(() => {
-    //     if(fullContentVisible) {
-    //         if(qaRef.current) {
-    //             // 当前回答距main顶部的距离
-    //             const itemTopOffsetTop = qaRef.current.offsetTop + (qaRef.current.offsetParent as HTMLDivElement).offsetTop;
-    //             // 当前回答距main底部的距离
-    //             const itemBottomOffsetTop = itemTopOffsetTop + qaRef.current.clientHeight;
-    //             // 当前scrollTop与视口高度之和位于当前回答的顶部和底部之间则fix
-    //             if((scrollTop + document.documentElement.clientHeight > itemTopOffsetTop + 150) && (scrollTop + document.documentElement.clientHeight < itemBottomOffsetTop)) {
-    //                 if(!shouldItemFix) {
-    //                     dispatch(changeShouldItemFix(true));
-    //                 }
-    //             } else {
-    //                 if(shouldItemFix) {
-    //                     dispatch(changeShouldItemFix(false));
-    //                 }
-
-    //             }
-    //         }
-    //     }
-    // }, [fullContentVisible, scrollTop, fixFlag]);
+    // mount之后执行副作用，点击全文阅读或收起时触发防抖函数
+    useEffect(() => {
+        debouncedCallback();
+    }, [fixFlag]);
 
     return (
         <div className={classnames} style={style} ref={qaRef}>

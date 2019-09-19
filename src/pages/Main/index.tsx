@@ -71,14 +71,6 @@ const Main = (props: RouteComponentProps) => {
         })
         return keys;
     })();
-    // const [debounceCallback] = useDebouncedCallback((scrollTop:number) => {
-    //     dispatch(changeScrolltop(scrollTop));
-    // }, 250, {maxWait: 500});
-    // const handleScroll = React.useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    //     const scrollTop = e.currentTarget.scrollTop;
-    //     debounceCallback(scrollTop);
-    //     // dispatch(changeScrolltop(scrollTop));
-    // }, [dispatch]);
     return (
         <div className="main">
             <Layout className="app-layout">

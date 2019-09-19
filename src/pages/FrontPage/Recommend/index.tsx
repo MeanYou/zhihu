@@ -36,7 +36,6 @@ const Recommend = (props: RecommendProps & RouteComponentProps) => {
         if(listRef.current) {
             const listBottomOffsetTop = listRef.current.offsetTop + listRef.current.offsetHeight;
             if((listBottomOffsetTop - window.pageYOffset - document.documentElement.clientHeight < 200) && !page.pageLoading) {
-                console.log('我要加载');
                 setPageLoading(true);
                 dispatch(getRecommendQaList(page.pageNum)).then(() => {
                     setPage({...page, pageNum: page.pageNum + 10,pageLoading: false});
