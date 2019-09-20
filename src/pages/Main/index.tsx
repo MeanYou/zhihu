@@ -119,7 +119,6 @@ const Main = (props: RouteComponentProps) => {
                         </Suspense>
                     </div>
                 </Content>
-                <Footer>Footer</Footer>
             </Layout>
         </div>
     );

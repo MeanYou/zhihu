@@ -4,9 +4,10 @@ import useInitialize from '@/hooks/useInitialize';
 import useThunkReducer from '@/hooks/useThunkReducer';
 import usePage from '@/hooks/usePage';
 import { initialState, reducer, getRecommendQaList } from './store';
-import { Spin } from 'antd';
+import { Skeleton } from 'antd';
 import QaList from '@/components/QaList/QaList';
 import { useDebouncedCallback, useDebounce } from 'use-debounce';
+import './style.less';
 
 const { useEffect, useRef } = React;
 
@@ -28,14 +29,11 @@ const Recommend = (props: RecommendProps & RouteComponentProps) => {
         });
     });
 
-    console.log(page.pageLoading)
-
-
     // mount之后执行副作用，滚动时触发防抖函数
     const [debouncedCallback] = useDebouncedCallback(() => {
         if(listRef.current) {
             const listBottomOffsetTop = listRef.current.offsetTop + listRef.current.offsetHeight;
-            if((listBottomOffsetTop - window.pageYOffset - document.documentElement.clientHeight < 200) && !page.pageLoading) {
+            if((listBottomOffsetTop - window.pageYOffset - document.documentElement.clientHeight < 500) && !page.pageLoading) {
                 setPageLoading(true);
                 dispatch(getRecommendQaList(page.pageNum)).then(() => {
                     setPage({...page, pageNum: page.pageNum + 10,pageLoading: false});
@@ -51,10 +49,14 @@ const Recommend = (props: RecommendProps & RouteComponentProps) => {
     }, []);
 
     return (
-        <div ref={listRef}>
+        <div ref={listRef} className="recommend">
             <QaList qaList={qaList} />
             {
-                page.pageLoading ? <Spin /> : null
+                page.pageLoading ? 
+                    <Skeleton
+                        active avatar
+                        paragraph={{ rows: 4 }}
+                        className="recommend__skeleton"/> : null
             }
         </div>
     );

@@ -1,6 +1,5 @@
 import { AnswerProps } from '@/common/CommonInterface';
 import xhr from '@/common/xhr';
-import { resolve } from 'url';
 // store
 export interface State {
     qaList: Array<AnswerProps>;

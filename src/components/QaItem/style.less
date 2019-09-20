@@ -1,5 +1,6 @@
 @import "../../common/common.less";
-
+@import "../../common/animation/emphasis.less";
+.emphasis(#1890ff, qaEmphasis);
 .qa {
     background-color: @base-bg-color;
     position: relative;
@@ -37,20 +38,43 @@
             }
 
             .qa__answer__excerpt__content {
-                color: #646464;
+                color: #1a1a1a;
                 font-size: 15px;
                 line-height: 1.67;
+                &:hover {
+                    cursor: pointer;
+                    color: #6a6a6a;
+                }
             }
         }
 
         .qa__answer__content {
-            color: #646464;
+            color: #1a1a1a;
             font-size: 15px;
             line-height: 1.67;
+
+            img {
+                display: block;
+                max-width: 100%;
+                margin: 0 auto;
+            }
         }
     }
 
     .qa__operator {
         margin-top: 10px;
+    }
+}
+
+.qa--emphasis {
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        animation: qaEmphasis 1.5s ease-in;
     }
 }

@@ -90,7 +90,7 @@ function realFunc(){
 window.addEventListener('scroll',throttle(realFunc,500,1000));
 ```
 ### 3. 需要再次优化的滚动
-给div绑定onScroll并dispatch的方式对性能过于不友好，决定通过使用window.addEventListener绑定删除事件，当然，防抖还在
+给div绑定onScroll并dispatch的方式对性能过于不友好，决定通过使用window.addEventListener绑定删除事件，当然，防抖还在。
 
 
 ## 3. 关于业务代码
@@ -125,7 +125,9 @@ window.addEventListener('scroll',throttle(realFunc,500,1000));
 ## 5. useReducer使用方式
 useReducer在[容器组件](https://www.jianshu.com/p/6fa2b21f5df3)中使用，在组件目录下新建store.ts文件，文件模板如下：
 ```
-// store
+/** 
+ * store
+*/
 export interface State {
    variable: string;
 }
@@ -134,7 +136,9 @@ export const initialState: State = {
    variable: ''
 };
 
-// action
+/** 
+ * action
+*/
 // action constant
 const CHANGE_VARIABLE = 'CHANGE_VARIABLE';
 // action type
@@ -147,8 +151,16 @@ export const changeVariable = (variable: string) => ({
     type: CHANGE_VARIABLE,
     payload: variable
 })
+// 业务action
+export const getVariableByApi = (param:string) => async (dispatch:any, getState:any) => {
+   // 也可以返回Promise
+   const res = await xhr.get('/api', {params: {param}});
+   dispatch(changeVariable(res.data));
+}
 
-// reducer
+/** 
+ * reducer
+*/
 export const reducer = (state: State, action: Action) => {
     switch (action.type) {
         case CHANGE_VARIABLE:
@@ -161,10 +173,5 @@ export const reducer = (state: State, action: Action) => {
     }
 }
 
-// 业务action
-export const getVariableByApi = (param:string) => async (dispatch:any, getState:any) => {
-   // 也可以返回Promise
-   const res = await xhr.get('/api', {params: {param}});
-   dispatch(changeVariable(res.data));
-}
+
 ```
