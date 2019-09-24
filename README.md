@@ -1,11 +1,37 @@
 # 仿知乎网页版
+
+## 1. 使用
+```
+git clone git@github.com:MeanYou/zhihu.git
+cd zhihu
+npm install
+npm start
+```
+
+## 2. 项目结构
+```
+|-- zhihu
+    |-- build
+    |-- config
+    |-- public
+    |-- scripts
+    |   |-- www
+    |-- src
+    |   |-- images
+    |   |-- javascripts
+    |   |-- stylesheets
+    |       |-- style.css
+    |-- .gitignore
+    |-- package.json
+    |-- tsconfig.json
+```
    
-## 1. 状态管理：
+## 3. 状态管理：
 1. 使用redux + react redux(hooks) + redux thunk(暂时) 管理全局应用状态；
 2. 页面级的状态在页面所属文件夹建立store.ts管理；
 3. 轻量简单的组件内部状态在组件内部使用useState管理，重量级的组件仍然使用页面的状态管理方式。
 
-## 2. 关于优化
+## 4. 关于优化
 ### 1. useCallback应该何时使用？
 无意义的优化是万恶之源，我在这篇文章里看到的[应该何时使用useCallback和useMemo](https://jancat.github.io/post/2019/translation-usememo-and-usecallback/)，我们判断一个函数是否需要缓存，要看它是否对性能造成了影响，一般情况下我们不用考虑太多优化，但是原则上为了避免不必要的重渲染，我们在DOM以及子组件的callback函数中默认使用useCallback(虽然这在简单组件中并没有提升性能，而且会增加代码量)。
 ### 2. 关于防抖和节流
@@ -93,7 +119,7 @@ window.addEventListener('scroll',throttle(realFunc,500,1000));
 给div绑定onScroll并dispatch的方式对性能过于不友好，决定通过使用window.addEventListener绑定删除事件，当然，防抖还在。
 
 
-## 3. 关于业务代码
+## 5. 关于业务代码
 
 ### 1. 业务代码应该写在哪里？
 这篇文章[业务逻辑代码应该放在哪里？](https://medium.com/@jeffbski/where-do-i-put-my-business-logic-in-a-react-redux-application-9253ef91ce1)讲得很好，这应该是一个困扰很多人的问题。
@@ -110,7 +136,7 @@ window.addEventListener('scroll',throttle(realFunc,500,1000));
 4. 综上考虑，cookie可以说是存储用户信息和登录状态的最优解，缺点是每次请求可能会把服务器无关的cookie发送过去，浪费流量并影响请求速度，这种情况下可以考虑使用localStoage存储无需发送到服务器的用户信息。（每个技术的出现都会有自身适用的场景，没有绝对的最优解，只有相对更适用的场景）
 5. 在本项目中，Route被简单分为Login和Main，对应着public和private，因此在Login页面登录成功后设置cookie，经过一番尝试，发现cookie中的token应当作为登录状态的唯一来源，不能存储到redux或任何变量中，一方面防止用户刷新页面组件变量变化，另一方面防止用户在使用过程中删除cookie，导致依赖cookie的变量变化。
 
-## 4. 确定业务
+## 6. 确定业务
 知乎是个很大的网站，业务繁多，涉及方面也众多，首页有推荐、关注、热榜等功能，发现模块有最新专题、圆桌讨论、热门收藏夹、专栏等板块，等你来答中又分为人气问题，潜力好问，新问题、人人答等板块，这还只是大菜单上的模块，加上搜索、问题、回答等等模块，个人很难完全覆盖所有业务，因此想确定一些简单实用的业务，作为学习交流使用。
 ### 1. 首页：
    
@@ -122,7 +148,7 @@ window.addEventListener('scroll',throttle(realFunc,500,1000));
    
 ### 3. 示例：react hooks各种示例
 
-## 5. useReducer使用方式
+## 7. useReducer使用方式
 useReducer在[容器组件](https://www.jianshu.com/p/6fa2b21f5df3)中使用，在组件目录下新建store.ts文件，文件模板如下：
 ```
 /** 

@@ -90,7 +90,7 @@ const QaItem = (props: QaItemProps) => {
                 entries.forEach(item => {
                     console.log(item);
                     item.isIntersecting && 
-                    ((item.target as HTMLImageElement).src = (item.target as HTMLImageElement).dataset.defaultWatermarkSrc as string);
+                    ((item.target as HTMLImageElement).src = (item.target as HTMLImageElement).dataset.actualsrc as string);
                 });
             }, {
                 rootMargin: '100px 0px'
