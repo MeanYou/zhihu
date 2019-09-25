@@ -29,7 +29,7 @@ export interface AuthorProps {
     avatar_url: string;// 头像地址
     avatar_url_template: string;// 头像地址模板
     badge: string[];// 徽章
-    edu_member_tag: { member_tag: string, type: 'default' };
+    edu_member_tag?: { member_tag: string, type: 'default' };
     gender: 0 | 1;// 0女，1男
     headline: string;// 用户描述
     id: string;// 用户ID
@@ -60,4 +60,35 @@ export interface AuthorDetailProps {
     use_default_avatar: boolean;// 是否使用默认头像
     user_type: 'people';// 用户类型
     vip_info: { is_vip: boolean; rename_days: number; }// 用户VIP信息
+}
+
+// 评论属性
+export interface CommentProps {
+    allow_delete: boolean;
+    allow_like: boolean;
+    allow_reply: boolean;
+    allow_vote: boolean;
+    author: {
+        role: string;
+        member: AuthorProps;
+    };
+    can_collapse: boolean;
+    can_recommend: boolean;
+    censor_status: number;
+    child_comment_count: number;
+    child_comments?: CommentProps[];
+    collapsed: boolean;
+    content: string;
+    created_time: number;
+    disliked: boolean;
+    featured: boolean;
+    id: number;
+    is_author: number;
+    is_delete: number;
+    resource_type: 'answer';
+    reviewing: boolean;
+    type: 'comment';
+    url: string;
+    vote_count: number;
+    voting: boolean;
 }

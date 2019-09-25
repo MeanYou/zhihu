@@ -7,9 +7,9 @@ import { reducer, initialState, changeFullContentVisible, changeShouldItemFix, h
 import AnswerOperator from './AnswerOperator';
 import './style.less';
 import { classNames } from '@/common/CommonUtil';
-import { useDebouncedCallback, useDebounce } from 'use-debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
-const { useCallback, useRef, useMemo, useEffect } = React;
+const { useCallback, useRef, useEffect } = React;
 
 export interface QaItemProps extends AnswerProps {
     fixFlag: boolean;
@@ -25,14 +25,14 @@ const QaItem = (props: QaItemProps) => {
 
     const [store, dispatch] = useThunkReducer(reducer, initialState);
     const { authorVisible, fullContentVisible, shouldItemFix, itemEmphasis,
-        commentVisible, toggleCommentVisible, commentModalVisible } = store;
+        commentVisible } = store;
     const classnames = classNames(className, `qa${itemEmphasis ? ' qa--emphasis' : ''}`);
 
     // 展开、收起的回调
     const showFullContent = useCallback(() => {
         dispatch(changeFullContentVisible(true));
         onFixFlagChange();
-    }, [dispatch]);
+    }, [dispatch, onFixFlagChange]);
     const handleClickFoldUp = useCallback(() => {
         // 收起时如果当前item不在视野内，scroll到当前item顶部
         if (qaRef.current) {
@@ -47,7 +47,7 @@ const QaItem = (props: QaItemProps) => {
         dispatch(clickFoldUp());
         onFixFlagChange();
 
-    }, [dispatch]);
+    }, [dispatch, onFixFlagChange]);
 
     // 判断QaItem是否应该浮动
     const judgeShouldItemFix = () => {
@@ -64,8 +64,6 @@ const QaItem = (props: QaItemProps) => {
                 shouldItemFix && dispatch(changeShouldItemFix(false));
             }
 
-            // 目前使用dangerouslySetInnerHTML展示回答的富文本，偷个懒暂时先用DOM执行懒加载
-
         }
     }
     // 获取QaItem滚动时防抖函数
@@ -76,13 +74,14 @@ const QaItem = (props: QaItemProps) => {
         return () => {
             window.removeEventListener('scroll', debouncedCallback);
         }
-    }, []);
+    }, [debouncedCallback]);
     // mount之后执行副作用，点击全文阅读或收起时触发防抖函数
     useEffect(() => {
         debouncedCallback();
-    }, [fixFlag]);
+    }, [fixFlag, debouncedCallback]);
     // mount之后执行副作用，全文阅读展开后开启监听，折叠后关闭监听
     useEffect(() => {
+        // 目前使用dangerouslySetInnerHTML展示回答的富文本，偷个懒暂时先用DOM执行懒加载
         let io: IntersectionObserver | null = null;
         
         if (fullContentVisible) {
@@ -95,7 +94,7 @@ const QaItem = (props: QaItemProps) => {
             }, {
                 rootMargin: '100px 0px'
             });
-            const imgs = document.querySelectorAll('.origin_image.zh-lightbox-thumb.lazy');
+            const imgs = document.querySelectorAll('.qa .qa__answer .qa__answer__content img');
             imgs.forEach(item => {
                 (io as IntersectionObserver).observe(item);
             });
