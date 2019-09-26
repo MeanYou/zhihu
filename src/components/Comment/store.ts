@@ -26,9 +26,10 @@ export const changeCommentList = (list: CommentProps[]) => ({
     payload: list
 })
 // 业务action
-export const getCommentListById = (answerId: number) => async (dispatch: any, getState: any) => {
+export const getCommentListById = (answerId: number, pageNum: number) => async (dispatch: any, getState: any) => {
     // 也可以返回Promise
-    const res = await xhr.get(`/comment/${answerId}`);
+    const res = await xhr.get(`/home/answer/${answerId}/comment?offset=${pageNum}&limit=10`);
+    console.log(res);
     dispatch(changeCommentList(res.data));
 }
 
