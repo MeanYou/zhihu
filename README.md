@@ -11,19 +11,18 @@ npm start
 ## 2. 项目结构
 ```
 |-- zhihu
-    |-- build
-    |-- config
-    |-- public
-    |-- scripts
-    |   |-- www
-    |-- src
-    |   |-- images
-    |   |-- javascripts
-    |   |-- stylesheets
-    |       |-- style.css
-    |-- .gitignore
-    |-- package.json
-    |-- tsconfig.json
+    |-- build   项目打包目录
+    |-- config  来自eject，cra的webpack配置目录
+    |-- public  
+        |-- index.html  模板文件，%PUBLIC_URL%可以在打包之后访问public目录下的文件，可以放非npm包的js库
+    |-- scripts 
+        |-- build.js    执行构建的脚本
+        |-- start.js    执行开发的脚本
+        |-- test.js     执行测试的脚本
+    |-- src 源码
+    |-- .gitignore  git忽略配置文件
+    |-- package.json    npm包管理文件
+    |-- tsconfig.json   ts配置文件
 ```
    
 ## 3. 状态管理：
