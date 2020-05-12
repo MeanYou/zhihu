@@ -33,3 +33,7 @@ export default class ErrorBoundry extends React.Component<{}, { error: any; erro
         return this.props.children;
     }
 }
+
+export const useErrorBoundry = () => {
+    return ErrorBoundry;
+}
