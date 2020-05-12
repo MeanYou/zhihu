@@ -2,18 +2,20 @@
  * 作为局部store的thunk中间件替代品
  */
 import * as React from 'react';
-
-type Reducer<S, A> = (prevState: S, action: A) => S;
-
+export type ThunkActionType<S> = {
+    [key:string]: any
+} | {
+    (dispatch: ThunkActionType<S>, getState: ()=>S): Promise<any> | void
+}
 const { useReducer } = React;
-const useThunkReducer = <S, A>(reducer:Reducer<any, any>, initialState:S):[S, any] => {
-    const [state, dispatch] = useReducer<Reducer<S, A>>(reducer, initialState);
+const useThunkReducer = <S, A>(reducer:React.Reducer<S, A>, initialState:S):[S, (action:ThunkActionType<S>) => Promise<any>] => {
+    const [state, dispatch] = useReducer<React.Reducer<S, A>>(reducer, initialState);
 
-    const thunkDispatch = (action:any) => {
+    const thunkDispatch = (action:ThunkActionType<S>) => {
         if(typeof action === 'function') {
             return action(thunkDispatch, () => state);
         } else {
-            return dispatch(action);
+            return dispatch(action as A);
         }
     }
 

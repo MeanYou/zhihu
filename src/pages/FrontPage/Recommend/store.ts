@@ -1,6 +1,5 @@
 import { AnswerProps } from '@/common/CommonInterface';
 import xhr from '@/common/xhr';
-import { resolve } from 'url';
 // store
 export interface State {
     qaList: Array<AnswerProps>;
@@ -40,7 +39,7 @@ export const reducer = (state: State, action: Action): State => {
 // 业务action
 export const getRecommendQaList = (offset: number, limit: number = 10) => (dispatch: any, getState: any) => {
     return new Promise(async(resolve, reject) => {
-        const res = await xhr.get<any, any>('/recommend', { params: { offset, limit } });
+        const res = await xhr.get<any, any>('/home/recommend', { params: { offset, limit } });
         const qaList = res.data.filter((item:any) => item.target.question).map((item: any) => item.target);
         const list = [...getState().qaList, ...qaList];
         dispatch(changeQaList(list));

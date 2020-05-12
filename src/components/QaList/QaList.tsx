@@ -7,19 +7,26 @@
  */
 import * as React from 'react';
 import { AnswerProps } from '@/common/CommonInterface';
+import { initialState, reducer, changeFixFlag, changeCommentVisible } from './store';
 import QaItem from '../QaItem';
+import { Modal } from 'antd';
+import useThunkReducer from '@/hooks/useThunkReducer';
+import Comment from '../Comment';
 
-const { useState } = React;
+const { useCallback } = React;
 
 export interface QaListProps {
     qaList: Array<AnswerProps>;
 }
 const QaList = (props: QaListProps) => {
     const { qaList } = props;
-    const [fixFlag, setFixFlag] = useState(true);
-    const handleSetFixFlag = () => {
-        setFixFlag(!fixFlag);
-    };
+    const [state, dispatch] = useThunkReducer(reducer, initialState);
+    const { fixFlag, commentVisible } = state;
+    // 展开折叠每个item时，使flag变成!flag，在QaItem中触发Effect重新计算是否fix
+    const handleSetFixFlag = useCallback(() => {
+        dispatch(changeFixFlag(!fixFlag));
+    }, [dispatch]);
+
     return (
         <div>
             {
